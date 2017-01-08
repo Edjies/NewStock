@@ -7,7 +7,48 @@ import StockConfig
 from StockFilter2 import find_kdj_jx, find_sma_up
 import numpy as np
 
+def select_1():
+    """
+    周线即将jx, 收于5日均线之上
+    :return:
+    """
+    stock_list = StockFilter.find_kdj_jx('sha', kline_type=StockConfig.kline_type_week, x_position=-1, k_max=50)
+    stock_list += StockFilter.find_kdj_jx('sza', kline_type=StockConfig.kline_type_week, x_position=-1, k_max=50)
+    stock_list = StockFilter.sma_close(stock_list, kline_type=StockConfig.kline_type_week)
+    stock_list = StockFilter.sma_close(stock_list, kline_type=StockConfig.kline_type_day)
+    return stock_list
 
+
+def select_2():
+    stock_list = []
+    #stock_list += StockFilter.find_kdj_jx('sha', kline_type=StockConfig.kline_type_day, x_position=-1, k_max=50)
+    stock_list += StockFilter.find_kdj_jx('sha', kline_type=StockConfig.kline_type_day, x_position=-2, k_max=50)
+    stock_list = StockFilter.sma_close(stock_list, kline_type=StockConfig.kline_type_week)
+    return stock_list
+
+
+def select_3():
+    stock_list = []
+    stock_list += StockFilter.find_kdj_jx('sha', kline_type=StockConfig.kline_type_week, x_position=-3, about=True)
+    stock_list = StockFilter.sma_close(stock_list, kline_type=StockConfig.kline_type_week, x_position=-3)
+    stock_list = StockFilter.sma_close(stock_list, kline_type=StockConfig.kline_type_week, x_position=-2, reverse=True)
+    return stock_list
+
+def select_4():
+    stock_list = StockIO.get_stock('sha')
+    stock_list = StockFilter.downdown(stock_list, kline_type=StockConfig.kline_type_week, count=5)
+    return stock_list
+
+
+def select_5():
+    stock_list = StockIO.get_stock('sha')
+    stock_list = StockFilter.upup(stock_list, kline_type=StockConfig.kline_type_week, count=1, x_position=-1)
+    return stock_list
+
+
+StockIO.save_stock('s5_20170108', stock_list=select_5(), message='跟踪:持续上涨')
+
+#StockReporter.query_report(select_1())
 # stock_list = StockFilter.find_kdj_jx('sha', kline_type=StockConfig.kline_type_day, x_position=-1, about=True)
 # stock_result = []
 # for stock in stock_list:
@@ -20,22 +61,3 @@ import numpy as np
 # print(stock_result)
 # StockReporter.query_report(stock_result)
 
-# first step : filter stock and select target stock
-@find_sma_up(StockConfig.kline_type_day, x_position=-1)
-@find_kdj_jx(StockConfig.kline_type_week, x_position=-1, k_max=60)
-def filter_stock(stock_list):
-    """
-    strategy:
-    :param stock_list: buy in Tuesday, Monday for confirm up trend, Friday must quits if profited.
-    :return:
-    """
-    return stock_list
-
-stock_list = filter_stock(StockIO.get_stock('sha'))
-print(stock_list)
-StockReporter.query_report(stock_list)
-
-# second step: track stock and select buy point
-
-
-# third step: track stock and select sell point

@@ -1,4 +1,5 @@
 # -*-coding:utf-8 -*-
+import os
 source_sina = 'sina'
 source_tencent = 'tencent'
 
@@ -32,3 +33,6 @@ class Stock(object):
     def __eq__(self, other):
         return self.stock_code == other.stock_code
 
+
+if not os.path.exists(path_track):
+    os.makedirs(path_track)

@@ -16,15 +16,18 @@ def get_stock(name):
         return []
     with open('{}/{}'.format(path_stock, name), 'r', encoding='utf-8') as f:
         for stock in f:
-            stock = stock.strip('\n').split(',')
-            if stock != '':
-                l_stock_list.append(Stock(stock[0], stock[1]))
+            if not stock.startswith('#'):
+                stock = stock.strip('\n').split(',')
+                if stock != '':
+                    l_stock_list.append(Stock(stock[0], stock[1]))
     return l_stock_list
 
 
-def save_stock(stock_pool_name, stock_list):
-    path = '{root}/{name}'.format(root=path_stock, name=stock_pool_name)
+def save_stock(stock_pool_name, stock_list, root=path_track, message=None):
+    path = '{root}/{name}'.format(root=root, name=stock_pool_name)
     with open(path, mode='w', encoding='utf-8') as f:
+        if message is not None:
+            f.write('#' + message)
         for stock in stock_list:
             f.write("{},{}\n".format(stock.stock_code, stock.stock_name))
 

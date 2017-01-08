@@ -1,6 +1,7 @@
 # -*-coding:utf-8 -*-
 import StockIndicator
 import StockIO
+import numpy as np
 
 def find_trend_up(stock_pool, kline_type):
     result = []
@@ -11,6 +12,71 @@ def find_trend_up(stock_pool, kline_type):
             if k[-2] > d[-2] and k[-1] < k[-2] and d[-1] > d[-2] and k[-1] > d[-1] and k[-1] > 50 and k[-1] < 80:
                 result.append(stock)
     return result
+
+
+def sma_close(stock_list, kline_type, x_position = -1, timeperiod=5, reverse=False):
+    result = []
+    for stock in stock_list:
+        kline = StockIO.get_kline(stock.stock_code, kline_type=kline_type)
+        close = kline[:, 2].astype(np.float)
+        open = kline[:, 1].astype(np.float)
+        sma = StockIndicator.sma(kline, timeperiod)[0]
+
+        if close.shape[0] < abs(x_position):
+            return result
+
+        if close[x_position] > sma[x_position] and not reverse:
+            result.append(stock)
+        elif close[x_position] < sma[x_position] and reverse:
+            result.append(stock)
+    return result
+
+
+def downdown(stock_list, kline_type, x_position = -1, count=4, timeperiod=5):
+    result = []
+    for stock in stock_list:
+        kline = StockIO.get_kline(stock.stock_code, kline_type=kline_type)
+        open = kline[:, 1].astype(np.float)
+        close = kline[:, 2].astype(np.float)
+        sma = StockIndicator.sma(kline, timeperiod)[0]
+        if close.shape[0] < abs(x_position) + count:
+            return result
+
+        hit = True
+        for i in range(count):
+            if  close[x_position - i] > sma[x_position - i]  or open[x_position - i] < close[x_position - i]:
+                hit = False
+                break
+        if hit:
+            result.append(stock)
+
+    return result
+
+def upup(stock_list, kline_type, x_position = -1, count=4, timeperiod=5, strict=True):
+    result = []
+    for stock in stock_list:
+        kline = StockIO.get_kline(stock.stock_code, kline_type=kline_type)
+        open = kline[:, 1].astype(np.float)
+        close = kline[:, 2].astype(np.float)
+        sma = StockIndicator.sma(kline, timeperiod)[0]
+        if close.shape[0] < abs(x_position) + count:
+            return result
+
+        hit = True
+        for i in range(count):
+            if  close[x_position - i] < sma[x_position - i]  or open[x_position - i] > close[x_position - i]:
+                hit = False
+                break
+        if strict:
+            position = x_position - count
+            if close[position] > open[position] and close[position] > sma[position]:
+                hit = False
+
+        if hit:
+            result.append(stock)
+
+    return result
+
 
 
 def find_kdj_jx(stock_pool, kline_type, n_rsv=9, x_position=-1, k_min=0, k_max=100, period=-1, times=1, about=False):

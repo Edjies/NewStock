@@ -35,7 +35,7 @@ def find_sma_up(kline_type, x_position=-1, timepeirod=5):
                 close = kline[:, 2].astype(np.float)
                 sma, = StockIndicator.sma(kline, timepeirod)
                 if sma.shape[0] > timepeirod + 3:
-                    if close[x_position] > sma[x_position] > sma[x_position - 1] > sma[x_position - 2]:
+                    if close[x_position] > sma[x_position] > sma[x_position - 1] > sma[x_position - 2] > close[x_position - 2]:
                         result.append(stock)
             return result
         return f_wrapper
