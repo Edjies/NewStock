@@ -78,6 +78,22 @@ def upup(stock_list, kline_type, x_position = -1, count=4, timeperiod=5, strict=
     return result
 
 
+def updown(stock_list, kline_type, x_position = -1, timeperiod=5):
+    result = []
+    for stock in stock_list:
+        kline = StockIO.get_kline(stock.stock_code, kline_type=kline_type)
+        open = kline[:, 1].astype(np.float)
+        close = kline[:, 2].astype(np.float)
+        sma = StockIndicator.sma(kline, timeperiod)[0]
+        if close.shape[0] < abs(x_position) + 2:
+            return result
+
+        if close[x_position - 1] > sma[x_position - 1] > open[x_position - 1] \
+            and open[x_position] > close[x_position] > sma[x_position]:
+            result.append(stock)
+    return result
+
+
 
 def find_kdj_jx(stock_pool, kline_type, n_rsv=9, x_position=-1, k_min=0, k_max=100, period=-1, times=1, about=False):
     """

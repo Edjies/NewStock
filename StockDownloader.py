@@ -64,6 +64,7 @@ def get_kline_from_tencent(stock_list, stock_type):
     end = True
     try:
         for stock in stock_list:
+            time.sleep(0.1)
             code = stock.stock_code
             if code.startswith('6'):
                 code = 'sh' + code
