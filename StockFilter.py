@@ -69,7 +69,7 @@ def upup(stock_list, kline_type, x_position = -1, count=4, timeperiod=5, strict=
                 break
         if strict:
             position = x_position - count
-            if close[position] > open[position] and close[position] > sma[position]:
+            if close[position] > open[position] or close[position] > sma[position] or sma[x_position - 1] > sma[x_position]:
                 hit = False
 
         if hit:
