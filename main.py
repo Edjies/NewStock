@@ -46,9 +46,9 @@ def select_5():
     return stock_list
 
 
-StockIO.save_stock('s5_20170108', stock_list=select_5(), message='跟踪:持续上涨')
-
-#StockReporter.query_report(select_1())
+stock_list = select_5()
+StockIO.save_stock('s5_20170108', stock_list=stock_list, message='跟踪:持续上涨')
+StockReporter.query_report(stock_list)
 # stock_list = StockFilter.find_kdj_jx('sha', kline_type=StockConfig.kline_type_day, x_position=-1, about=True)
 # stock_result = []
 # for stock in stock_list:

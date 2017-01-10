@@ -25,13 +25,13 @@ def query_report(stock_list):
     for key in json_obj.keys():
         item_obj = json_obj[key]
         try:
-            reports.append((item_obj['code'][1:], item_obj['price'], item_obj['updown'], item_obj['percent'] * 100))
+            reports.append((item_obj['code'][1:], item_obj['name'], item_obj['price'], item_obj['updown'], item_obj['percent'] * 100))
         except Exception:
             pass
 
-    reports.sort(key=lambda x:x[3])
+    reports.sort(key=lambda x:x[4])
 
-    print("%-10s %8s %8s %8s" % ('code', 'price', 'chg', 'chg_per'))
+    print("%-10s %-10s %8s %8s %8s" % ('code', 'name', 'price', 'chg', 'chg_per'))
     for report in reports:
-        print("%-10s %8.2f %8.2f %8.2f" % (report[0], report[1], report[2], report[3]))
+        print("%-10s %-10s %8.2f %8.2f %8.2f" % (report[0], report[1], report[2], report[3], report[4]))
 
