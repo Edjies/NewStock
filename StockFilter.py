@@ -69,7 +69,7 @@ def upup(stock_list, kline_type, x_position = -1, count=4, timeperiod=5, strict=
                 break
         if strict:
             position = x_position - count
-            if close[position] > open[position] and close[position] > sma[position]:
+            if close[position] > open[position] or close[position] > sma[position] or sma[x_position - 1] > sma[x_position]:
                 hit = False
 
         if hit:
@@ -95,7 +95,7 @@ def updown(stock_list, kline_type, x_position = -1, timeperiod=5):
 
 
 
-def find_kdj_jx(stock_pool, kline_type, n_rsv=9, x_position=-1, k_min=0, k_max=100, period=-1, times=1, about=False):
+def find_kdj_jx(stock_pool, kline_type, n_rsv=9, x_position=-1, k_min=0, k_max=100, period=-1, times=1, about=False, date=None):
     """
     :param stock_pool: name
     :param kline_type:
@@ -111,6 +111,10 @@ def find_kdj_jx(stock_pool, kline_type, n_rsv=9, x_position=-1, k_min=0, k_max=1
     result = []
     stock_list = StockIO.get_stock(stock_pool)
     for stock in stock_list:
+        if date is not None:
+            x_position = StockIndicator.position(date, stock.stock_code, kline_type=kline_type)
+        if x_position is None:
+            continue
         k, d = StockIndicator.kd(StockIO.get_kline(stock.stock_code, kline_type), n_rsv)
         if is_jx(k, d, x_position, about):
             if between(k[x_position], k_min, k_max):

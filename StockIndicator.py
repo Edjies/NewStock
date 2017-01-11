@@ -79,9 +79,39 @@ def ema(kline, *timeperiod):
     return [talib.EMA(close, timeperiod=i) for i in timeperiod]
 
 
+def chg_per(kline, from_position, to_position=-1):
+    """
+    左开右闭
+    :param kline:
+    :param from_position:
+    :param to_position:
+    :return:
+    """
+    to_position = None if to_position == -1 else to_position
+    close_b = kline[:, 2].astype(np.float)[from_position + 1: to_position]
+    close_p = kline[:, 2].astype(np.float)[from_position: to_position - 1 if to_position is not None else -1]
+    return close_b - close_p, (close_b - close_p) / close_p * 100
+
+
+def position(date, stock_code, kline_type=kline_type_day):
+    kline = get_kline(stock_code, kline_type)
+    dates = kline[:, 0]
+    length = dates.shape[0]
+    if date in dates:
+        index = np.argwhere(dates == date)[0][0] - length
+        return index
+    return None
+
+
+
+
+
 if __name__ == '__main__':
     sma5, sma10 = sma(get_kline('601611', kline_type=kline_type_day), 5, 10)
-    print(sma5)
-    print(sma10)
 
+    chg, chg_per = chg_per(get_kline('002040', kline_type_day), from_position=-4, to_position=-1)
+    print(chg)
+    print(chg_per)
+
+    print(position('2016-12-01', '002040'))
 
