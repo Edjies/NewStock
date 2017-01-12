@@ -83,14 +83,14 @@ def select_6():
     return stock_list
 
 
-def select_7():
+def select_7(date):
     """
     还有about=False等
     :return:
     """
-    filter_date = '2016-11-21'
+    filter_date = date
     fileter_x_position = None
-    stock_list = StockFilter.find_kdj_jx('sza', kline_type=StockConfig.kline_type_day, x_position=fileter_x_position, date=filter_date, about=True)
+    stock_list = StockFilter.find_kdj_jx('sza', kline_type=StockConfig.kline_type_day, x_position=fileter_x_position, date=filter_date, about=False)
     result = []
     hit = False
     for stock in stock_list:
@@ -98,24 +98,50 @@ def select_7():
         kline = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_day)
         open = kline[:, 1].astype(np.float)
         close = kline[:, 2].astype(np.float)
+        vol = kline[:, 5].astype(np.float)
         sma5 = StockIndicator.sma(kline, 5)[0]
         if sma5.shape[0] < 5 + abs(x_position):
             continue
-        if sma5[x_position] < close[x_position]  \
-            and open[x_position - 1] < close[x_position - 1] \
+        if sma5[x_position] < open[x_position] < close[x_position]  \
             and sma5[x_position - 2] > close[x_position - 2] \
             and sma5[x_position - 3] > close[x_position - 3] \
                 and sma5[x_position - 4] > close[x_position - 4] \
-                and sma5[x_position - 5] > close[x_position - 5]:
+                and sma5[x_position - 5] < close[x_position - 5] :
+
             result.append(stock)
     return result
+
+def select_7_1(x_position=-16,min_item=120):
+    """
+    wst
+    :return:
+    """
+    stock_list = StockIO.get_stock('sha')
+    result = []
+    for stock in stock_list:
+        kline = StockIO.get_kline(stock.stock_code, StockConfig.kline_type_day)
+        from_position = x_position - 4
+        to_position = x_position + 1 if x_position != -1 else None
+        open = kline[:,1].astype(np.float)[from_position:to_position + 1]
+        close = kline[:, 2].astype(np.float)[from_position:to_position]
+        sma5 = StockIndicator.sma(kline, 5)[0][from_position:to_position]
+        if kline.shape[0] > min_item:
+            chg, chg_per = StockIndicator.chg_per(kline, from_position, to_position)
+            if chg[- 4] > 0 and chg[ - 3] > 0 and chg[ - 2] < 0 and chg[-1] > 0:
+                if close[-1] > close[-4] and chg_per[-1] < 3 and sma5[-2] < close[-2] and open[-1] < close[-1]:
+                    result.append(stock)
+    return result
+
+
 
 """
 todo: 观察不同position的后续变化， up down up  or up up
 """
-stock_list = select_7()
-StockIO.save_stock('s7_20170110', stock_list=stock_list, message='down to jx')
+from_date = '2016-11-03'
+to_date = '2016-11-04'
+stock_list = select_7(from_date)
+StockIO.save_stock('s7_1_20170110', stock_list=stock_list, message='down to jx')
 print(stock_list)
-StockStatistics.stat_chg(stock_list, '2016-11-21', '2016-11-24')
+StockStatistics.stat_chg(stock_list, from_date=from_date, to_date=to_date)
 
 
