@@ -2,6 +2,7 @@
 import StockConfig
 import json
 from StockConfig import Stock
+import numpy as np
 
 # l1 = [Stock('1', 'a'), Stock('2', 'b'), Stock('3', 'c')]
 # l2 = [Stock('1', 'a'), Stock('3', 'c')]
@@ -11,3 +12,9 @@ from StockConfig import Stock
 x = -1
 for i in range(4):
     print(x - i)
+
+
+
+
+nparr2 = np.array([1, 2, 3], dtype=int)
+print(np.average(nparr2))

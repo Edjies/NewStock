@@ -27,7 +27,7 @@ def stat_chg(stock_list, from_date, to_date, kline_type=StockConfig.kline_type_d
         print("%-10s %-10s %8.2f %8.2f %8.2f" % (report[0], report[1], report[2], report[3], report[4]))
     return reports
 
-def stat_vb(stock_list, peoriod=20, x_position=-90, min_item=360):
+def stat_vb(stock_list, peoriod=20, x_position=-10, min_item=360):
     vbs = []
     for stock in stock_list:
         origin_kline = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_day)
