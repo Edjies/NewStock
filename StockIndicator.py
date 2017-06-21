@@ -78,6 +78,21 @@ def ema(kline, *timeperiod):
     close = kline[:, 2].astype(np.float)
     return [talib.EMA(close, timeperiod=i) for i in timeperiod]
 
+def vibration(kline):
+    """
+    计算振幅， 第一个数不准确
+    :param kline:
+    :return:
+    """
+    open = kline[:, 1].astype(np.float)
+    close = kline[:, 2].astype(np.float)
+    high = kline[:, 3].astype(np.float)
+    low = kline[:, 4].astype(np.float)
+    diff = high - low
+    p_close = np.roll(close, 1)
+    return np.round(diff / p_close * 100, decimals=2)
+
+
 
 def chg_per(kline, from_position, to_position=-1):
     """
@@ -107,11 +122,13 @@ def position(date, stock_code, kline_type=kline_type_day):
 
 
 if __name__ == '__main__':
-    sma5, sma10 = sma(get_kline('601611', kline_type=kline_type_day), 5, 10)
+    # sma5, sma10 = sma(get_kline('601611', kline_type=kline_type_day), 5, 10)
+    #
+    # chg, chg_per = chg_per(get_kline('002040', kline_type_day), from_position=-4, to_position=-1)
+    # print(chg)
+    # print(chg_per)
+    #
+    # print(position('2016-12-01', '002040'))
 
-    chg, chg_per = chg_per(get_kline('002040', kline_type_day), from_position=-4, to_position=-1)
-    print(chg)
-    print(chg_per)
-
-    print(position('2016-12-01', '002040'))
+    print(vibration(get_kline('601611', kline_type=kline_type_day)))
 

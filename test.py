@@ -9,12 +9,14 @@ import numpy as np
 #
 # print([x for x in l1 if x in l2])
 
-x = -1
-for i in range(4):
-    print(x - i)
-
-
-
-
+# x = -1
+# for i in range(4):
+#     print(x - i)
+#
+#
+#
+#
 nparr2 = np.array([1, 2, 3], dtype=int)
-print(np.average(nparr2))
+print(nparr2)
+
+print(np.roll(nparr2, 1))

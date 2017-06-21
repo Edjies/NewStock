@@ -3,7 +3,7 @@ import StockIO
 import StockConfig
 import StockIndicator
 import numpy as np
-def filter_by_zf(stock_list, kline_type=StockConfig.kline_type_day, x_position=-1, period=30, limit_chg=(30, 100), limit_avg_zf=(8, 200), limit_bottom=20, min_item=360):
+def filter_by_zf(stock_list, kline_type=StockConfig.kline_type_day, x_position=-1, period=10, limit_chg=(30, 100), limit_avg_zf=(8, 200), limit_bottom=20, min_item=360):
     result=[]
     for stock in stock_list:
         origin_kline = StockIO.get_kline(stock.stock_code, kline_type=kline_type)
@@ -34,7 +34,7 @@ def filter_by_zf(stock_list, kline_type=StockConfig.kline_type_day, x_position=-
 
 if __name__ == '__main__':
     position = StockIndicator.position('2017-01-16', '601398', kline_type=StockConfig.kline_type_day)
-    print(filter_by_zf(StockIO.get_stock('sha'), x_position=-4, kline_type=StockConfig.kline_type_week, min_item=120))
+    print(filter_by_zf(StockIO.get_stock('sha'), x_position=-2, kline_type=StockConfig.kline_type_week, min_item=120))
     # for test single stock
     #stock_list = [StockConfig.Stock('600072', '')]
     #print(filter_by_zf(stock_list, x_position=position))

@@ -27,7 +27,7 @@ def stat_chg(stock_list, from_date, to_date, kline_type=StockConfig.kline_type_d
         print("%-10s %-10s %8.2f %8.2f %8.2f" % (report[0], report[1], report[2], report[3], report[4]))
     return reports
 
-def stat_vb(stock_list, peoriod=20, x_position=-10, min_item=360):
+def stat_vb(stock_list, peoriod=30, x_position=-10, min_item=360):
     vbs = []
     for stock in stock_list:
         origin_kline = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_day)
@@ -50,10 +50,25 @@ def stat_vb(stock_list, peoriod=20, x_position=-10, min_item=360):
     vbs.sort(key=lambda x:x[1])
     return vbs
 
+def stat_low(stock_list, peoriod=120, x_position=-2, min_item=360):
+    vbs = []
+    for stock in stock_list:
+        origin_kline = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_day)
+        if origin_kline.shape[0] < min_item:
+            continue
+        from_position = x_position - peoriod + 1
+        to_position = None if x_position == -1 else x_position
+        kline = origin_kline[from_position:to_position]
+        open = kline[:, 1].astype(np.float)
+        close = kline[:, 2].astype(np.float)
+        high = kline[:, 3].astype(np.float)
+        low = kline[:, 4].astype(np.float)
+        if low[-1] <= np.min(low) and low[-1] != 0:
+            vbs.append(stock)
+    return vbs
+
 
 if __name__ == '__main__':
     stock_list = [StockConfig.Stock('601766', 'ZGZC')]
-    vbs = stat_vb(StockIO.get_stock('sha'))
-    print(vbs)
-    vbs.sort(key=lambda x:x[2])
+    vbs = stat_low(StockIO.get_stock('sha'))
     print(vbs)
