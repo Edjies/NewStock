@@ -48,12 +48,53 @@ def select(stock_list, x_position=-1, min_item=120):
 
     return result
 
+
+def select_2(stock_list, kline_type = StockConfig.kline_type_day, x_position=-1,  period=4, critical_vb=10, critical_count=3):
+    """
+    随机游走模型
+    :return:
+    """
+
+
+    result = []
+    for stock in stock_list:
+        try:
+            kline = StockIO.get_kline(stock.stock_code, kline_type=kline_type)
+        except:
+            continue
+        if kline.shape[0] <= period:
+            continue
+
+        open = kline[:, 1].astype(np.float)[:None if x_position == -1 else (x_position + 1)]
+        close = kline[:, 2].astype(np.float)[:None if x_position == -1 else (x_position + 1)]
+        high = kline[:, 3].astype(np.float)[:None if x_position == -1 else (x_position + 1)]
+        low = kline[:, 4].astype(np.float)[:None if x_position == -1 else (x_position + 1)]
+        vb = StockIndicator.vibration(kline)[:None if x_position == -1 else (x_position + 1)][-period:]
+        cg =  (close - open)[-period:]
+        up_count = 0
+        down_count = 0
+        last = 0
+        for index, z in enumerate(vb):
+            if z >= critical_vb:
+                if cg[index] > 0:
+                    up_count += 1
+                    last = 1
+                else:
+                    down_count += 1
+                    last = -1
+        if up_count + down_count >= critical_count and up_count >=1 and down_count >= 1:
+            result.append(stock)
+            print(vb)
+            print(stock)
+
+    return result
+
 if __name__ == '__main__':
     # 均线处决胜负， 胜者向上，败者向下
     date = '2017-02-03'
     position = StockIndicator.position(date, '000001')
-    for x in range(-6, 0):
-        print('x = ', x)
-        print(select(StockIO.get_stock('sza'), x_position=x))
-    #print(select(StockIO.get_stock('sza'), x_position=-10))
+    # for x in range(-6, 0):
+    #     print('x = ', x)
+    #     print(select(StockIO.get_stock('sza'), x_position=x))
+    print(select_2(StockIO.get_stock('sza'), x_position=-1, kline_type=StockConfig.kline_type_week))
     #print(down_to(StockIO.get_stock('sha'), duration=60))

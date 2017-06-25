@@ -16,7 +16,10 @@ import numpy as np
 #
 #
 #
-nparr2 = np.array([1, 2, 3], dtype=int)
-print(nparr2)
+nparr2 = np.array([4,5 ,1, 2, 3, 4, 5], dtype=int)
+print(nparr2[:-2][-2:])
+
+for index,i in enumerate(nparr2):
+    print(index, i)
 
 print(np.roll(nparr2, 1))

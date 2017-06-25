@@ -7,7 +7,6 @@ import numpy as np
 
 def bottom(stock_list, kline_type = StockConfig.kline_type_day, x_position=-1,  period=20, round=2):
     """
-    当股价到达均线附近时， 要么调整， 要么突破
     :param stock_list:
     :param kline_type:
     :param avg:
