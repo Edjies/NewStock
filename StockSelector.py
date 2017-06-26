@@ -89,6 +89,7 @@ def select_2(stock_list, kline_type = StockConfig.kline_type_day, x_position=-1,
 
     return result
 
+
 if __name__ == '__main__':
     # 均线处决胜负， 胜者向上，败者向下
     date = '2017-02-03'
