@@ -93,6 +93,22 @@ def vibration(kline):
     return np.round(diff / p_close * 100, decimals=2)
 
 
+def chg(kline):
+    """
+    计算涨跌幅
+    :param kline:
+    :return:
+    """
+    open = kline[:, 1].astype(np.float)
+    close = kline[:, 2].astype(np.float)
+    high = kline[:, 3].astype(np.float)
+    low = kline[:, 4].astype(np.float)
+    p_close = np.roll(close, 1)
+    diff = close - p_close
+    return np.round(diff / p_close * 100, decimals=2)
+
+
+
 
 def chg_per(kline, from_position, to_position=-1):
     """
