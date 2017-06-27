@@ -1,3 +1,4 @@
 data/
-.idea
+.idea/
 _pycache_
+__pycache__/
