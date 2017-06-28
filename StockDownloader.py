@@ -192,9 +192,9 @@ if __name__ == '__main__':
     if not os.path.exists(path_kline_month):
         os.makedirs(path_kline_month)
 
-    #get_stock_pool(source_sina)
+    get_stock_pool(source_sina)
     #update_stock_kline(source_tencent, kline_type_day)
-    #download_stock_kline(source_tencent, kline_type_day)
+    download_stock_kline(source_tencent, kline_type_day)
     download_stock_kline(source_tencent, kline_type_week)
     #download_stock_kline(source_tencent, kline_type_month)
     #upate_kline_day(sina_node_sh_a, 1)

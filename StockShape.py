@@ -30,6 +30,24 @@ def bottom(stock_list, kline_type = StockConfig.kline_type_day, x_position=-1,  
             result.append(stock)
     return result
 
+
+def is_lower_shadow(open, close, high, low, min_vb=6, ratio=0.5, red=False):
+    """
+    1. 全天振幅在6个点以上， 下影线起码在4个点
+    :return:
+    """
+    shadow = min(open, close) - low
+    full = high - low
+    vb = full / low * 100
+    if vb > 6:
+        if shadow / full > 0.5:
+            if red:
+                if close > open:
+                    return True
+                return False
+            return True
+
+
 if __name__ == '__main__':
     # 均线处决胜负， 胜者向上，败者向下
     date = '2017-02-03'
