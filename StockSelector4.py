@@ -7,7 +7,7 @@ import StockShape
 import numpy as np
 
 
-def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, min_vb=6, ratio=0.5, min_item=120):
+def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, min_vb=6, ratio=0.4, min_item=120):
     """
     """
     result = []
@@ -35,5 +35,5 @@ if __name__ == '__main__':
     # for x in range(-6, 0):
     #     print('x = ', x)
     #     print(select(StockIO.get_stock('sza'), x_position=x))
-    print(select(StockIO.get_stock('sza'), x_position=-2, kline_type=StockConfig.kline_type_day))
+    print(select(StockIO.get_stock('sha'), x_position=-6, kline_type=StockConfig.kline_type_week, min_vb=15, ratio=0.3))
     #print(down_to(StockIO.get_stock('sha'), duration=60))

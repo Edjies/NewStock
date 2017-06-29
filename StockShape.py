@@ -39,8 +39,8 @@ def is_lower_shadow(open, close, high, low, min_vb=6, ratio=0.5, red=False):
     shadow = min(open, close) - low
     full = high - low
     vb = full / low * 100
-    if vb > 6:
-        if shadow / full > 0.5:
+    if vb > min_vb:
+        if shadow / full > ratio:
             if red:
                 if close > open:
                     return True
