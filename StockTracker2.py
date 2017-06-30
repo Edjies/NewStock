@@ -1,11 +1,11 @@
 # -*-coding:utf-8 -*-
 import requests
-import tkinter as tk
 import json
 import os
 import numpy as np
-import datetime
 import StockConfig
+from tkinter import messagebox
+import time
 
 track_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir, os.pardir, 'stock', 'track'))
 def track():
@@ -44,64 +44,40 @@ def track():
     # 分析数据
     result = []
     for target in data:
+        print(target)
         target_code = target[0]
-        price_uts = float(target[1])
-        price_dtb = float(target[2])
+        low_to = float(0 if target[1] == '' else float(target[1]))
+        high_to = float(0 if target[2] == '' else float(target[2]))
         if target_code.startswith('6'):
             target_code = '0' + target_code
         else:
             target_code = '1' + target_code
-        cur_price = quote[target_code]['price']
-        # analysis
-        if cur_price >= price_uts or cur_price <= price_dtb:
-            result.append([target[0], cur_price, price_uts, price_dtb, 's' if cur_price >= price_uts else 'b', datetime.datetime.now().strftime('%H:%m')])
+        cur_price = float(quote[target_code]['price'])
+        message = ''
+        if low_to != 0 and cur_price <= low_to:
+            message = target_code[1:] + '跌到目标价位:' +str(low_to)
+        elif high_to != 0 and cur_price >= high_to:
+            message = target_code[1:] + '涨到目标价位:' + str(high_to)
+
+
+        if True:
+            messagebox.showinfo("tips", message)
+
+
+        # # analysis
+        # if cur_price >= price_uts or cur_price <= price_dtb:
+        #     result.append([target[0], cur_price, price_uts, price_dtb, 's' if cur_price >= price_uts else 'b', datetime.datetime.now().strftime('%H:%m')])
 
     print(result)
     return result
 
     # tk显示结果
 
+if __name__=="__main__":
 
-# while True:
-#     time.sleep(5)
-#     try:
-#         track()
-#     except Exception as e:
-#         print(e)
-def main():
-    root = tk.Tk()
-    w = 200  # width for the Tk root
-    h = 250  # height for the Tk root
-    ws = root.winfo_screenwidth()  # width of the screen
-    hs = root.winfo_screenheight()  # height of the screen
-    x = ws - w - 20
-    y = hs - h - 80
-
-    print('%dx%d+%d+%d' % (w, h, x, y))
-    # set the dimensions of the screen
-    # and where it is placed
-    root.geometry('%dx%d+%d+%d' % (w, h, x, y))
-    # root.configure(background='gold')
-    root.call('wm', 'attributes', '.', '-topmost', '1')
-    root.lift()
-    # write list
-    listbox = tk.Listbox(root)
-    listbox.configure(width=0)
-    listbox.pack()
-
-    # listbox.delete(2, 'end')
-    def render(mydata):
-        listbox.delete(0, 'end')
-        for item in mydata:
-            listbox.insert('end', item)
-
-    def task():
-        render(track())
-        root.after(5000, task)
-
-    root.after(1000, task)
-
-    root.mainloop()  # starts the mainloop
-
-
-main()
+    while True:
+        try:
+            track()
+        except Exception as e:
+            pass
+        time.sleep(5)
