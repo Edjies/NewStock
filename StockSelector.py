@@ -7,7 +7,6 @@ import numpy as np
 
 def select(stock_list, x_position=-1, min_item=120):
     """
-    当股价到达均线附近时， 要么调整， 要么突破
     :param stock_list:
     :param kline_type:
     :param avg:
@@ -94,8 +93,8 @@ if __name__ == '__main__':
     # 均线处决胜负， 胜者向上，败者向下
     date = '2017-02-03'
     position = StockIndicator.position(date, '000001')
-    # for x in range(-6, 0):
-    #     print('x = ', x)
-    #     print(select(StockIO.get_stock('sza'), x_position=x))
-    print(select_2(StockIO.get_stock('sza'), x_position=-1, kline_type=StockConfig.kline_type_week))
+    for x in range(-6, 0):
+        print('x = ', x)
+        print(select(StockIO.get_stock('sza'), x_position=x))
+    #print(select_2(StockIO.get_stock('sza'), x_position=-1, kline_type=StockConfig.kline_type_week))
     #print(down_to(StockIO.get_stock('sha'), duration=60))

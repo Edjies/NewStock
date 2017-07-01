@@ -36,6 +36,7 @@ def track():
     session = requests.Session()
     session.trust_env = False
     url = 'http://api.money.126.net/data/feed/{}'.format(codes)[:-1]
+    print(url)
     r = session.get(url)
     quote = json.loads(r.text[len('_ntes_quote_callback('): -2])
 
