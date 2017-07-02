@@ -1,4 +1,5 @@
-data/
+data/kline/
+data/stock/
 .idea/
 _pycache_
 __pycache__/
