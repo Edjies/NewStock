@@ -23,7 +23,7 @@ def track():
                 data.append(line.strip('\n').split(','))
 
     data = np.array(data)
-
+    print(data)
     # 请求网络数据
     codes = ''
     for code in data[:, 0]:
@@ -59,8 +59,7 @@ def track():
         elif high_to != 0 and cur_price >= high_to:
             message = target_code[1:] + '涨到目标价位:' + str(high_to)
 
-
-        if True:
+        if message != '':
             messagebox.showinfo("tips", message)
 
 
@@ -79,5 +78,6 @@ if __name__=="__main__":
         try:
             track()
         except Exception as e:
+            print(e)
             pass
-        time.sleep(5)
+        time.sleep(15)

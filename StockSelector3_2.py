@@ -6,7 +6,7 @@ import StockIndicator
 import numpy as np
 
 
-def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, min_chg=-30, max_chg=5, min_vb = 15, max_vb=100, min_item=120):
+def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, min_chg=-10, max_chg=0, min_vb = 13, max_vb=100, min_item=120):
     """
 
     :param stock_list:
@@ -37,4 +37,4 @@ if __name__ == '__main__':
     # for x in range(-6, 0):
     #     print('x = ', x)
     #     print(select(StockIO.get_stock('sza'), x_position=x))
-    print(select(StockIO.get_stock('sha'), x_position=-5, kline_type=StockConfig.kline_type_week))
+    print(select(StockIO.get_stock('sza'), x_position=-3, kline_type=StockConfig.kline_type_week))
