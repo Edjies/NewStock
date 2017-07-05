@@ -45,7 +45,7 @@ def select(stock_list, last_date, kline_type=StockConfig.kline_type_week, x_posi
                     if np.min(low[x_position+1:] <= min(close[x_position], open[x_position])):
                         print(stock)
                         result.append(stock)
-    return result
+        return result
 
 if __name__ == '__main__':
     date = '2017-02-03'
@@ -58,3 +58,8 @@ if __name__ == '__main__':
     # 按照涨幅来选
     print(select(StockIO.get_stock('sha'), '2017-07-03', x_position=-3, kline_type=StockConfig.kline_type_week,
                  min_chg=0, max_chg=30, min_vb=10, max_vb=30))
+# =======
+#     for x in range(-3, 0):
+#         print('x = ', x)
+#         print(select(StockIO.get_stock('sha'), x_position=x, kline_type=StockConfig.kline_type_week))
+
