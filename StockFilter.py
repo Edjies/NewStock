@@ -2,6 +2,7 @@
 import StockIndicator
 import StockIO
 import numpy as np
+import StockConfig
 
 def find_trend_up(stock_pool, kline_type):
     result = []
@@ -205,6 +206,20 @@ def kdj_is_in(stock, kline_type, position = 0, k_min=0, k_max=30):
         if k_max > k[position] > k[position - 1] > k_min:
             return True
     return False
+
+
+def is_stop_trade(stock, last_date):
+    """
+    是否停牌
+    :param stock:
+    :param last_date:
+    :return:
+    """
+    kline = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_day)
+    date = kline[:, 0]
+    if date[-1] == last_date:
+        return False
+    return True
 
 
 def intersection(l1, l2):

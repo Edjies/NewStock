@@ -3,6 +3,7 @@ import StockConfig
 import json
 from StockConfig import Stock
 import numpy as np
+import talib
 
 # l1 = [Stock('1', 'a'), Stock('2', 'b'), Stock('3', 'c')]
 # l2 = [Stock('1', 'a'), Stock('3', 'c')]
@@ -16,7 +17,8 @@ import numpy as np
 #
 #
 #
-nparr2 = np.array([4,5 ,1, 2, 3, 4, 5], dtype=int)
+nparr2 = np.array([1.0, 2.0, 3.0, 4.0, 5.0], dtype=float)
+print(talib.SMA(nparr2, timeperiod=5))
 print(nparr2[:-2][-2:])
 
 for index,i in enumerate(nparr2):

@@ -35,6 +35,6 @@ if __name__ == '__main__':
     position = StockIndicator.position(date, '000001')
     for x in range(-6, 0):
         print('x = ', x)
-        print(select(StockIO.get_stock('sha'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=8, ratio=0.1))
+        print(select(StockIO.get_stock('sha'), x_position=x, kline_type=StockConfig.kline_type_week, min_vb=8, ratio=0.2))
 
     #print(down_to(StockIO.get_stock('sha'), duration=60))
