@@ -49,7 +49,8 @@ def is_stop_trade(stock):
     kline = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_day)
     date_ref = kline_ref[:, 0]
     date = kline[:, 0]
-    if date[-1] == date_ref[-1]:
+    high = kline[:, 3].astype(np.float)
+    if date[-1] == date_ref[-1] and high[-1] != 0:
         return False
     return True
 

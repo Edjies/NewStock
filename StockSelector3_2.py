@@ -46,8 +46,8 @@ if __name__ == '__main__':
     # 按照跌幅来选
     #print(select(StockIO.get_stock('sha'), '2017-07-03', x_position=-3, kline_type=StockConfig.kline_type_week, min_chg=-50, max_chg=0, min_vb=15, max_vb=100))
     # 按照涨幅来选
-        print(select(StockIO.get_stock('level_1'), x_position=-1, kline_type=StockConfig.kline_type_week,
-                 min_chg=-100, max_chg=0, min_vb=12, max_vb=100))
+        print(select(StockIO.get_stock('level_2'), x_position=-2, kline_type=StockConfig.kline_type_week,
+                 min_chg=-100, max_chg=0, min_vb=10, max_vb=100))
 # =======
 #     for x in range(-3, 0):
 #         print('x = ', x)
