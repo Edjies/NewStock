@@ -7,6 +7,7 @@ import StockFilter
 import numpy as np
 from StockFilterWrapper import filtrate_high_price, filtrate_stop_trade
 
+
 @filtrate_stop_trade
 def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, period=4, count_limit=3, min_vb=0, max_vb=100, min_item=120):
     """
@@ -30,7 +31,6 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, pe
         if kline.shape[0] < min_item:
             continue
 
-        #chg = StockIndicator.chg(kline)
         vb = StockIndicator.vibration(kline)
         count = 0
         for vb_value in vb[x_position - period:x_position]:
@@ -44,13 +44,13 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, pe
 if __name__ == '__main__':
     date = '2017-02-03'
     position = StockIndicator.position(date, '000001')
-    # for x in range(-6, 0):
-    #     print('x = ', x)
-    #     print(select(StockIO.get_stock('sza'), x_position=x))
-    # 按照跌幅来选
-    #print(select(StockIO.get_stock('sha'), '2017-07-03', x_position=-3, kline_type=StockConfig.kline_type_week, min_chg=-50, max_chg=0, min_vb=15, max_vb=100))
-    # 按照涨幅来选
-    print(select(StockIO.get_stock('sza'),x_position=-1, kline_type=StockConfig.kline_type_week, period=4, count_limit=3, min_vb=10, max_vb=100))
+    for x in range(-4, 0):
+        print('x = ', x)
+        # print(select(StockIO.get_stock('sza'), x_position=x))
+        # 按照跌幅来选
+        #print(select(StockIO.get_stock('sha'), '2017-07-03', x_position=-3, kline_type=StockConfig.kline_type_week, min_chg=-50, max_chg=0, min_vb=15, max_vb=100))
+        # 按照涨幅来选
+        print(select(StockIO.get_stock('sza'),x_position=-1, kline_type=StockConfig.kline_type_week, period=5, count_limit=3, min_vb=10, max_vb=100))
 # =======
 #     for x in range(-3, 0):
 #         print('x = ', x)

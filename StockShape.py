@@ -46,6 +46,7 @@ def is_lower_shadow(open, close, high, low, min_vb=6, ratio=0.5, red=False):
                     return True
                 return False
             return True
+    return False
 
 
 if __name__ == '__main__':
@@ -54,6 +55,6 @@ if __name__ == '__main__':
     position = StockIndicator.position(date, '000001')
     for x in range(-6, 0):
         print('x = ', x)
-        print(bottom(StockIO.get_stock('sza'), x_position=-3))
+        print(bottom(StockIO.get_stock('sha'), x_position=-3))
     #print(select(StockIO.get_stock('sza'), x_position=-10))
     #print(down_to(StockIO.get_stock('sha'), duration=60))
