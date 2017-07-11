@@ -3,9 +3,11 @@
 import StockIO
 import StockConfig
 import StockIndicator
+from StockFilterWrapper import filtrate_stop_trade
 import numpy as np
 
 
+@filtrate_stop_trade
 def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, min_chg=0, max_chg=50, min_vb = 10, max_vb=100, min_item=120):
     """
 
@@ -26,7 +28,7 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
 
         chg = StockIndicator.chg(kline)
         vb = StockIndicator.vibration(kline)
-        if max_chg > abs(chg[x_position]) > min_chg and max_vb > vb[x_position] > min_vb and chg[x_position] < 0:
+        if max_chg > chg[x_position] > min_chg and max_vb > vb[x_position] > min_vb:
             print(stock)
             result.append(stock)
     return result
@@ -34,7 +36,14 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
 if __name__ == '__main__':
     date = '2017-02-03'
     position = StockIndicator.position(date, '000001')
-    # for x in range(-6, 0):
-    #     print('x = ', x)
-    #     print(select(StockIO.get_stock('sza'), x_position=x))
-    print(select(StockIO.get_stock('sza'), x_position=-3, kline_type=StockConfig.kline_type_week))
+    result = {}
+    for x in range(-3, 0):
+        print('x = ', x)
+        stock_list = select(StockIO.get_stock('level_1'), x_position=x, kline_type=StockConfig.kline_type_day,
+                 min_chg=-100, max_chg=100, min_vb=5, max_vb=20)
+        print(stock_list)
+        for stock in stock_list:
+            result[stock.stock_code] = result.get(stock.stock_code, 0) + 1
+
+    print(sorted(result.items(), key=lambda d: d[1]))
+
