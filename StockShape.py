@@ -50,6 +50,25 @@ def is_lower_shadow(open, close, high, low, min_vb=6, ratio=0.5, red=False):
             return True
     return False
 
+def is_shadow(open, close, high, low, min_vb=6, ratio=0.5, red=False):
+    """
+    1. 全天振幅在6个点以上， 影线起码在4个点
+    :return:
+    """
+    shadow = (high - low) - (abs(open - close))
+    full = high - low
+    if low == 0:
+        return False
+    vb = full / low * 100
+    if vb > min_vb:
+        if shadow / full > ratio:
+            if red:
+                if close > open:
+                    return True
+                return False
+            return True
+    return False
+
 
 if __name__ == '__main__':
     # 均线处决胜负， 胜者向上，败者向下
