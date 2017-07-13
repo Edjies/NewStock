@@ -33,6 +33,9 @@ class Stock(object):
     def __eq__(self, other):
         return self.stock_code == other.stock_code
 
+    def __hash__(self):
+        return self.stock_code.__hash__()
+
 
 if not os.path.exists(path_track):
     os.makedirs(path_track)

@@ -29,7 +29,6 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
         sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
 
         if StockShape.is_lower_shadow(open[x_position], close[x_position], high[x_position], low[x_position], min_vb=min_vb, ratio=ratio, red=False):
-            if sma5[x_position] < sma10[x_position] < sma20[x_position]:
                 print(stock)
                 result.append(stock)
     return result
@@ -37,8 +36,15 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
 if __name__ == '__main__':
     date = '2017-02-03'
     position = StockIndicator.position(date, '000001')
-    for x in range(-8, 0):
+    result = {}
+    for x in range(-3, 0):
         print('x = ', x)
-        print(select(StockIO.get_stock('level_1'), x_position=x, kline_type=StockConfig.kline_type_week, min_vb=12, ratio=0.4))
+        stock_list = select(StockIO.get_stock('level_1'), x_position=x, kline_type=StockConfig.kline_type_week, min_vb=4, ratio=0.4)
+
+        print(stock_list)
+        for stock in stock_list:
+            result[stock] = result.get(stock, 0) + 1
+
+    print(sorted(result.items(), key=lambda d: d[1], reverse=True))
 
     #print(down_to(StockIO.get_stock('sha'), duration=60))

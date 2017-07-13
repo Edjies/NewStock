@@ -37,12 +37,12 @@ if __name__ == '__main__':
     date = '2017-02-03'
     position = StockIndicator.position(date, '000001')
     result = {}
-    for x in range(-10, 0):
+    for x in range(-5, 0):
         print('x = ', x)
-        stock_list = select(StockIO.get_stock('level_2'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=6, ratio=0.4)
+        stock_list = select(StockIO.get_stock('level_1'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=3.5, ratio=0.2)
         print(stock_list)
         for stock in stock_list:
-            result[stock.stock_code] = result.get(stock.stock_code, 0) + 1
+            result[stock] = result.get(stock, 0) + 1
 
     print(sorted(result.items(), key=lambda d: d[1], reverse=True))
 
