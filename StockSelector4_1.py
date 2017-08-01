@@ -11,7 +11,7 @@ from StockFilterWrapper import filtrate_stop_trade
 @filtrate_stop_trade
 def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, min_vb=6, ratio=0.4, min_item=120):
     """
-    下影线选股法
+    影线选股法
     """
     result = []
     for stock in stock_list:
@@ -39,11 +39,10 @@ if __name__ == '__main__':
     result = {}
     for x in range(-5, 0):
         print('x = ', x)
-        stock_list = select(StockIO.get_stock('level_1'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=3.5, ratio=0.2)
+        stock_list = select(StockIO.get_stock('level_1'), x_position=x, kline_type=StockConfig.kline_type_week, min_vb=14, ratio=0.5)
         print(stock_list)
         for stock in stock_list:
             result[stock] = result.get(stock, 0) + 1
 
     print(sorted(result.items(), key=lambda d: d[1], reverse=True))
-
     #print(down_to(StockIO.get_stock('sha'), duration=60))

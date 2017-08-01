@@ -8,7 +8,7 @@ from tkinter import messagebox
 import time
 
 track_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir, os.pardir, 'stock', 'track'))
-def track():
+def track(track_file='recent.txt'):
     """
     :param targets: 需要追踪的目标集合
     @:param code:
@@ -17,7 +17,7 @@ def track():
     """
     # 读取本地数据
     data = []
-    with open('{}/position_track.txt'.format(StockConfig.path_track), 'r', encoding='utf-8') as f:
+    with open('{}/{}'.format(StockConfig.path_track, track_file), 'r', encoding='utf-8') as f:
         for line in f.readlines():
             if not line.startswith("#"):
                 data.append(line.strip('\n').split(','))
@@ -58,6 +58,7 @@ def track():
             message = target_code[1:] + '跌到目标价位:' +str(low_to)
         elif high_to != 0 and cur_price >= high_to:
             message = target_code[1:] + '涨到目标价位:' + str(high_to)
+            message = ''
 
         if message != '':
             messagebox.showinfo("tips", message)
@@ -76,8 +77,10 @@ if __name__=="__main__":
 
     while True:
         try:
-            track()
+            track('recent.txt')
         except Exception as e:
             print(e)
             pass
         time.sleep(15)
+
+        # 如果当前时间下午15点，则中止

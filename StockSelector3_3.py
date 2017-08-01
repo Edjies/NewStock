@@ -44,7 +44,7 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, pe
 if __name__ == '__main__':
     date = '2017-02-03'
     position = StockIndicator.position(date, '000001')
-    for x in range(-4, 0):
+    for x in range(-20, 0):
         print('x = ', x)
         # print(select(StockIO.get_stock('sza'), x_position=x))
         # 按照跌幅来选

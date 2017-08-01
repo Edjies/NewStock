@@ -61,11 +61,14 @@ def is_high_price(stock):
     :param stock:
     :return:
     """
-    kline = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_week)
-    sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
-    if sma5[-1] > sma10[-1] > sma20[-1]:
-        return True
-    return False
+    try:
+        kline = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_week)
+        sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
+        if sma5[-1] > sma10[-1] > sma20[-1] and sma5[-2] > sma10[-2] > sma20[-2]:
+            return True
+        return False
+    except Exception as e:
+        return False
 
 
 

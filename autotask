@@ -1,0 +1,2 @@
+6-8 16 * * 1-5 cd  /home/hubble/git-proj/NewStock; python3 t.py
+20 9-17 * * 1-5 cd /home/hubble/git-proj/NewStock; python3 StockTrack2.py
