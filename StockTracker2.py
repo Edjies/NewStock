@@ -57,8 +57,8 @@ def track(track_file='recent.txt'):
         if low_to != 0 and cur_price <= low_to:
             message = target_code[1:] + '跌到目标价位:' +str(low_to)
         elif high_to != 0 and cur_price >= high_to:
+            print(cur_price, high_to)
             message = target_code[1:] + '涨到目标价位:' + str(high_to)
-            message = ''
 
         if message != '':
             messagebox.showinfo("tips", message)
@@ -77,7 +77,9 @@ if __name__=="__main__":
 
     while True:
         try:
-            track('recent.txt')
+            track('position_track.txt')
+            track('track_day.txt')
+            track('track_week.txt')
         except Exception as e:
             print(e)
             pass

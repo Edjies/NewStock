@@ -5,6 +5,7 @@ import StockConfig
 import StockIndicator
 import StockShape
 import numpy as np
+import StockAlgrithm
 from StockFilterWrapper import filtrate_stop_trade
 
 
@@ -27,9 +28,12 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
         high = kline[:, 3].astype(np.float)
         low = kline[:, 4].astype(np.float)
         vb = StockIndicator.vibration(kline)
+        chg = StockIndicator.chg(kline)
         sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
 
         if StockShape.is_lower_shadow(open_[x_position], close[x_position], high[x_position], low[x_position], min_vb=min_vb, ratio=ratio, red=False):
+            if not StockAlgrithm.sumOfSubArray(chg[-15:])[0] > 15:
+
                 print(stock)
                 result.append(stock)
                 # append to file
@@ -47,7 +51,7 @@ if __name__ == '__main__':
     result = {}
     for x in range(-5, 0):
         print('x = ', x)
-        stock_list = select(StockIO.get_stock('level_1'), x_position=x, kline_type=StockConfig.kline_type_week, min_vb=20, ratio=0.4)
+        stock_list = select(StockIO.get_stock('level_1'), x_position=x, kline_type=StockConfig.kline_type_week, min_vb=14, ratio=0.05)
 
         print(stock_list)
         for stock in stock_list:
