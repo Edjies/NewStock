@@ -4,6 +4,7 @@ import StockIO
 import StockConfig
 import StockIndicator
 import StockShape
+import StockAlgrithm
 import numpy as np
 from StockFilterWrapper import filtrate_stop_trade
 
@@ -26,9 +27,11 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
         close = kline[:, 2].astype(np.float)
         high = kline[:, 3].astype(np.float)
         low = kline[:, 4].astype(np.float)
+        chg = StockIndicator.chg(kline)
         sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
 
         if StockShape.is_shadow(open[x_position], close[x_position], high[x_position], low[x_position], min_vb=min_vb, ratio=ratio, red=False):
+            if not StockAlgrithm.sumOfSubArray(chg[-15:])[0] > 15:
                 print(stock)
                 result.append(stock)
     return result
@@ -36,10 +39,20 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
 if __name__ == '__main__':
     date = '2017-02-03'
     position = StockIndicator.position(date, '000001')
+    # result = {}
+    # for x in range(-5, 0):
+    #     print('x = ', x)
+    #     stock_list = select(StockIO.get_stock('level_1'), x_position=x, kline_type=StockConfig.kline_type_week, min_vb=14, ratio=0.5)
+    #     print(stock_list)
+    #     for stock in stock_list:
+    #         result[stock] = result.get(stock, 0) + 1
+    #
+    # print(sorted(result.items(), key=lambda d: d[1], reverse=True))
+
     result = {}
     for x in range(-5, 0):
         print('x = ', x)
-        stock_list = select(StockIO.get_stock('level_1'), x_position=x, kline_type=StockConfig.kline_type_week, min_vb=14, ratio=0.5)
+        stock_list = select(StockIO.get_stock('level_1'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=5, ratio=0.01)
         print(stock_list)
         for stock in stock_list:
             result[stock] = result.get(stock, 0) + 1

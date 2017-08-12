@@ -32,7 +32,7 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
         sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
 
         if StockShape.is_lower_shadow(open_[x_position], close[x_position], high[x_position], low[x_position], min_vb=min_vb, ratio=ratio, red=False):
-            if not StockAlgrithm.sumOfSubArray(chg[-15:])[0] > 15:
+            if not StockAlgrithm.sumOfSubArray(chg[-15:])[0] > 20:
 
                 print(stock)
                 result.append(stock)
@@ -49,9 +49,9 @@ if __name__ == '__main__':
     date = '2017-02-03'
     position = StockIndicator.position(date, '000001')
     result = {}
-    for x in range(-5, 0):
+    for x in range(-4, 0):
         print('x = ', x)
-        stock_list = select(StockIO.get_stock('level_1'), x_position=x, kline_type=StockConfig.kline_type_week, min_vb=14, ratio=0.05)
+        stock_list = select(StockIO.get_stock('level_1'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=6, ratio=0.3)
 
         print(stock_list)
         for stock in stock_list:

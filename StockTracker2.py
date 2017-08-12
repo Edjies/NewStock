@@ -8,7 +8,7 @@ from tkinter import messagebox
 import time
 
 track_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir, os.pardir, 'stock', 'track'))
-def track(track_file='recent.txt'):
+def track(track_file='position_track.txt'):
     """
     :param targets: 需要追踪的目标集合
     @:param code:
@@ -78,8 +78,10 @@ if __name__=="__main__":
     while True:
         try:
             track('position_track.txt')
-            track('track_day.txt')
-            track('track_week.txt')
+            track('track_000.txt')
+            track('track_002.txt')
+            track('track_600.txt')
+            track('track_601.txt')
         except Exception as e:
             print(e)
             pass
