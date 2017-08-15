@@ -26,6 +26,7 @@ def track(track_file='position_track.txt'):
     pageNum = 40
 
     print(len(stock_data))
+    result = []
     while page * pageNum < len(stock_data):
         time.sleep(3)
         from_position = page * pageNum
@@ -53,7 +54,6 @@ def track(track_file='position_track.txt'):
 
         print(data)
         # 分析数据
-        result = []
         for target in data:
             print(target)
             target_code = target[0]
@@ -69,10 +69,11 @@ def track(track_file='position_track.txt'):
                 message = target_code[1:] + '跌到目标价位:' +str(low_to)
             elif high_to != 0 and cur_price >= high_to:
                 print(cur_price, high_to)
-                message = target_code[1:] + '涨到目标价位:' + str(high_to)
+                #message = target_code[1:] + '涨到目标价位:' + str(high_to)
 
             if message != '':
-                messagebox.showinfo("tips", message)
+                result.append((target[0], cur_price, low_to, high_to, target[3]))
+                #messagebox.showinfo("tips", message)
 
 
             # # analysis
@@ -86,9 +87,10 @@ def track(track_file='position_track.txt'):
 
 if __name__=="__main__":
 
-    while True:
+    #while True:
         try:
-            track('level_1_track.txt')
+            print(track('level_1_week_track.txt'))
+
         except Exception as e:
             print(e)
             pass

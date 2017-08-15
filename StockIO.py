@@ -3,8 +3,9 @@ from StockConfig import  *
 import os
 import numpy as np
 import json
+from StockFilterWrapper import filtrate_stop_trade
 
-
+@filtrate_stop_trade
 def get_stock(name):
     """
     :param name: pool_name

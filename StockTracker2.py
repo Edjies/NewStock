@@ -19,7 +19,7 @@ def track(track_file='position_track.txt'):
     data = []
     with open('{}/{}'.format(StockConfig.path_track, track_file), 'r', encoding='utf-8') as f:
         for line in f.readlines():
-            if not line.startswith("#"):
+            if not line.startswith("#") and not '\n' == line:
                 data.append(line.strip('\n').split(','))
 
     data = np.array(data)
