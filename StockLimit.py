@@ -8,11 +8,11 @@ from StockDownloader import write_stock_pool
 
 
 
-def limit(stock_list, output_file='',high_limit_point=8, low_limit_point=5):
+def limit(stock_list, output_file='',high_limit_point=5, low_limit_point=4):
     result = []
     for stock in stock_list:
         try:
-            kline = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_week)
+            kline = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_day)
         except Exception as e:
             print(e)
             continue
@@ -32,5 +32,5 @@ def limit(stock_list, output_file='',high_limit_point=8, low_limit_point=5):
 
 
 if __name__ == '__main__':
-    limit(StockIO.get_stock('level_1'), 'level_1_week_track.txt')
+    limit(StockIO.get_stock('level_1'), 'level_1_track.txt')
 

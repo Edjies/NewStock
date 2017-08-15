@@ -89,7 +89,7 @@ if __name__=="__main__":
 
     #while True:
         try:
-            print(track('level_1_week_track.txt'))
+            print(track('level_1_track.txt'))
 
         except Exception as e:
             print(e)
