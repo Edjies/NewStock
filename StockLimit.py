@@ -28,7 +28,7 @@ def limit(stock_list, output_file='',high_limit_point=5, low_limit_point=4):
     with open(path, mode='w', encoding='utf-8') as f:
         for item in result:
             print(item[0], item[1], item[2], item[3])
-            f.write("{}, {}, {}, {}, {}\n".format(item[0], '%05.2f' % item[1], '%05.2f' % item[2], item[3], '(* 振荡)'))
+            f.write("{}, {}, {}, {}, {}\n".format(item[0], '%05.2f' % item[1], '%05.2f' % item[2], item[3], '(* N)'))
 
 
 if __name__ == '__main__':

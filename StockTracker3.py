@@ -64,12 +64,14 @@ def track(track_file='position_track.txt'):
             else:
                 target_code = '1' + target_code
             cur_price = float(quote[target_code]['price'])
+            if target[0] == '000982':
+                print(cur_price)
             message = ''
             if low_to != 0 and cur_price <= low_to:
                 message = target_code[1:] + '跌到目标价位:' +str(low_to)
             elif high_to != 0 and cur_price >= high_to:
                 print(cur_price, high_to)
-                #message = target_code[1:] + '涨到目标价位:' + str(high_to)
+                message = target_code[1:] + '涨到目标价位:' + str(high_to)
 
             if message != '':
                 result.append((target[0], cur_price, low_to, high_to, target[3]))
@@ -79,7 +81,7 @@ def track(track_file='position_track.txt'):
             # # analysis
             # if cur_price >= price_uts or cur_price <= price_dtb:
             #     result.append([target[0], cur_price, price_uts, price_dtb, 's' if cur_price >= price_uts else 'b', datetime.datetime.now().strftime('%H:%m')])
-
+        print(len(result))
         print(result)
     return result
 
