@@ -78,10 +78,10 @@ if __name__=="__main__":
     while True:
         try:
             track('position_track.txt')
-            track('track_000.txt')
-            track('track_002.txt')
-            track('track_600.txt')
-            track('track_601.txt')
+            # track('track_000.txt')
+            # track('track_002.txt')
+            # track('track_600.txt')
+            # track('track_601.txt')
         except Exception as e:
             print(e)
             pass
