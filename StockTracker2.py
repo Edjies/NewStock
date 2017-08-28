@@ -39,7 +39,6 @@ def track(track_file='position_track.txt'):
     print(url)
     r = session.get(url)
     quote = json.loads(r.text[len('_ntes_quote_callback('): -2])
-
     print(data)
     # 分析数据
     result = []
