@@ -63,9 +63,9 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, period = 10, x_po
 if __name__ == '__main__':
     # 周线
     for x in range(3, 5):
-        result = select(StockIO.get_stock('level_1'), period=x, x_position=-2, min_vb= 8, kline_type=StockConfig.kline_type_week)
+        result = select(StockIO.get_stock('sza'), period=x, x_position=-2, min_vb= 8, kline_type=StockConfig.kline_type_week)
         print("周线 period = ", str(x), ":", sorted(result.items(), key=lambda d: d[1], reverse=True))
     # 日线
-    result = select(StockIO.get_stock('level_1'), period=10, x_position=-2, min_vb= 4, kline_type=StockConfig.kline_type_day)
+    result = select(StockIO.get_stock('sza'), period=10, x_position=-2, min_vb= 4, kline_type=StockConfig.kline_type_day)
     print("日线:", sorted(result.items(), key=lambda d: d[1], reverse=True))
 

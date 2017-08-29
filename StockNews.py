@@ -82,7 +82,7 @@ if __name__=='__main__':
     cursor = conn.cursor()
     cursor.execute(
     'select stock_code, stock_name, count(*) as count from cnstock24_gg'
-               '  where datetime > \'2017-07-00 00:00:00\' and datetime < \'2017-07-20 00:00:00\''
+               '  where datetime > \'2017-07-10 00:00:00\' and datetime < \'2017-08-22 00:00:00\''
                ' group by stock_code'
                ' having count > 1'
                ' order by count desc')
@@ -92,7 +92,7 @@ if __name__=='__main__':
 
     cursor.execute(
     'select bk_code, bk_name, count(*) as count from cnstock24_bk'
-    ' where datetime > \'2017-07-00 00:00:00\' and datetime < \'2017-07-20 00:00:00\''
+    ' where datetime > \'2017-07-10 00:00:00\' and datetime < \'2017-08-22 00:00:00\''
     ' group by bk_code'
     ' having count > 1'
     ' order by count desc')
