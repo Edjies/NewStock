@@ -39,6 +39,9 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, period = 10, x_po
 
         support_line = min(np.min(open), np.min(close))
         pressure_line = max(np.max(open), np.max(close))
+        diff = pressure_line - support_line
+        support_line += diff * 0.1
+        pressure_line -= diff * 0.1
 
         if stock.stock_code == '000760':
             print(support_line, pressure_line)
@@ -51,21 +54,25 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, period = 10, x_po
         for i in range(-period, 0):
             if low[i] < pressure_line < high[i]:
                 up = 1
+                if down == 1:
+                    result[stock] = result.get(stock, 0) + 1
+                    down = 0
+                    continue
             if low[i] < support_line < high[i]:
                 down=1
-
-            if up ==1 and down == 1:
-                result[stock] = result.get(stock, 0) + 1
-                up = 0
-                down = 0
+                if up == 1:
+                    result[stock] = result.get(stock, 0) + 1
+                    up = 0
+                    continue
     return result
 
 if __name__ == '__main__':
-    # 周线
-    for x in range(3, 5):
-        result = select(StockIO.get_stock('level_1'), period=x, x_position=-2, min_vb= 8, kline_type=StockConfig.kline_type_week)
-        print("周线 period = ", str(x), ":", sorted(result.items(), key=lambda d: d[1], reverse=True))
+    # # 周线
+    # for x in range(3, 7):
+    #     result = select(StockIO.get_stock('level_1'), period=x, x_position=-2, min_vb= 10, kline_type=StockConfig.kline_type_week)
+    #     print("周线 period = ", str(x), ":", sorted(result.items(), key=lambda d: d[1], reverse=True))
     # 日线
-    result = select(StockIO.get_stock('level_1'), period=10, x_position=-2, min_vb= 4, kline_type=StockConfig.kline_type_day)
-    print("日线:", sorted(result.items(), key=lambda d: d[1], reverse=True))
+    for x in range(3, 15):
+        result = select(StockIO.get_stock('level_1'), period=x, x_position=-1, min_vb= 5, kline_type=StockConfig.kline_type_day)
+        print("日线 period = ", str(x), ":", sorted(result.items(), key=lambda d: d[1], reverse=True))
 
