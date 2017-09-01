@@ -4,7 +4,9 @@ import StockIO
 import StockConfig
 import StockIndicator
 import numpy as np
+import StockFilterWrapper
 
+@StockFilterWrapper.filtrate_stop_trade
 def select(stock_list, x_position=-1, min_item=120):
     """
     :param stock_list:
@@ -31,7 +33,7 @@ def select(stock_list, x_position=-1, min_item=120):
         sma5_w, sma10_w, sma20_w = StockIndicator.sma(kline_week, 5, 10, 20)
 
         # 三线向下， 5 < 10 < 20 and  closeX > openX (x = x_position)
-        if sma5_w[x_position] < sma10_w[x_position] < sma20_w[x_position]:
+        if close_week[x_position] < sma5_w[x_position] < sma10_w[x_position] < sma20_w[x_position]:
             # if sma5_w[x_position - 1] < sma10_w[x_position - 1] < sma20_w[x_position - 1]:
             #     #if sma10_w[x_position] > close_week[x_position] > sma5_w[x_position] > open_week[x_position]:
             #     if close_week[x_position] > sma5_w[x_position] and close_week[x_position] > open_week[x_position]:
@@ -50,10 +52,8 @@ def select(stock_list, x_position=-1, min_item=120):
 
 if __name__ == '__main__':
     # 均线处决胜负， 胜者向上，败者向下
-    date = '2017-02-03'
-    position = StockIndicator.position(date, '000001')
     for x in range(-3, 0):
         print('x = ', x)
-        print(select(StockIO.get_stock('sza'), x_position=x))
+        print(select(StockIO.get_stock('level_1'), x_position=x))
     #print(select_2(StockIO.get_stock('sza'), x_position=-1, kline_type=StockConfig.kline_type_week))
     #print(down_to(StockIO.get_stock('sha'), duration=60))

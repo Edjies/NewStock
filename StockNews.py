@@ -27,6 +27,7 @@ def init_stock_table():
 
 def init_news_list():
     last_id = get_last_news_id()
+    print(last_id)
     first = True
     minid = 0
     session = requests.Session()
@@ -65,8 +66,9 @@ def get_last_news_id():
     conn = sqlite3.connect('newstock.db')
     cursor = conn.cursor()
     cursor.execute('select news_id from cnstock24_gg limit 1')
-    if cursor.rowcount == 1:
-       id = cursor.fetchone()[0]
+    item = cursor.fetchone()
+    if item:
+       id = item[0]
     cursor.close()
     conn.commit()
     conn.close()
@@ -76,15 +78,17 @@ def get_last_news_id():
 
 
 if __name__=='__main__':
-    # init_stock_table()
-    # init_news_list()
+     # init_stock_table()
+    #init_news_list()
+
+
     conn = sqlite3.connect('newstock.db')
     cursor = conn.cursor()
     cursor.execute(
     'select stock_code, stock_name, count(*) as count from cnstock24_gg'
-               '  where datetime > \'2017-07-10 00:00:00\' and datetime < \'2017-08-22 00:00:00\''
+               '  where datetime > \'2017-08-30 00:00:00\' and datetime < \'2017-09-31 00:00:00\''
                ' group by stock_code'
-               ' having count > 1'
+               ' having count == 2'
                ' order by count desc')
 
     for item in cursor.fetchall():
@@ -92,9 +96,9 @@ if __name__=='__main__':
 
     cursor.execute(
     'select bk_code, bk_name, count(*) as count from cnstock24_bk'
-    ' where datetime > \'2017-07-10 00:00:00\' and datetime < \'2017-08-22 00:00:00\''
+    ' where datetime > \'2017-08-30 00:00:00\' and datetime < \'2017-09-31 00:00:00\''
     ' group by bk_code'
-    ' having count > 1'
+    ' having count== 2'
     ' order by count desc')
 
     for item in cursor.fetchall():

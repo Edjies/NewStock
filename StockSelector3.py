@@ -41,9 +41,9 @@ if __name__ == '__main__':
     # position = StockIndicator.position(date, '000001')
     #日线
     result = {}
-    for x in range(-5, 0):
+    for x in range(-10, 0):
         print('x = ', x)
-        stock_list = select(StockIO.get_stock('sza'), x_position=x, kline_type=StockConfig.kline_type_day,
+        stock_list = select(StockIO.get_stock('level_2'), x_position=x, kline_type=StockConfig.kline_type_day,
                  min_chg=-100, max_chg=100, min_vb=6, max_vb=100)
         print(stock_list)
 

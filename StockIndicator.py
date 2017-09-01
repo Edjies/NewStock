@@ -108,6 +108,21 @@ def chg(kline):
     return np.round(diff / p_close * 100, decimals=2)
 
 
+def hsl(kline, ltgb):
+    """
+    计算换手率
+    :param kline
+    :param ltgb 流通股本
+    :return:
+    """
+    if ltgb is None or ltgb <= 0:
+        return None
+    cjl = kline[:, 5].astype(np.float)
+    for i,v in enumerate(cjl):
+        if cjl[i] < 10000000:
+            cjl[i] = cjl[i] * 100
+
+    return np.round(cjl/(ltgb * 100), decimals=2)
 
 
 def chg_per(kline, from_position, to_position=-1):
@@ -122,6 +137,9 @@ def chg_per(kline, from_position, to_position=-1):
     close_b = kline[:, 2].astype(np.float)[from_position + 1: to_position]
     close_p = kline[:, 2].astype(np.float)[from_position: to_position - 1 if to_position is not None else -1]
     return close_b - close_p, (close_b - close_p) / close_p * 100
+
+
+
 
 
 def position(date, stock_code, kline_type=kline_type_day):
@@ -146,5 +164,5 @@ if __name__ == '__main__':
     #
     # print(position('2016-12-01', '002040'))
 
-    print(vibration(get_kline('601611', kline_type=kline_type_day)))
+    print(hsl(get_kline('600000', kline_type=kline_type_day), ltgb=2810376.3899))
 

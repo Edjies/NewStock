@@ -3,6 +3,7 @@ from StockConfig import  *
 import os
 import numpy as np
 import json
+import csv
 from StockFilterWrapper import filtrate_stop_trade
 
 
@@ -54,6 +55,21 @@ def save_kline(stock_code, kline_type, kline):
     path = '{root}/{type}/{code}'.format(root=path_kline, type=kline_type, code=stock_code)
     with open(path, mode='w', encoding='utf-8') as f:
         f.write(kline.tolist().__repr__())
+
+
+
+def get_ltgb():
+    result = {}
+    csv_reader = csv.reader(open('data/result.csv', encoding='utf-8'))
+    position = 0
+    for row in csv_reader:
+        if position == 0:
+            position = 1
+            continue
+
+        stock_code = row[0][2:]
+        result[stock_code] = float(row[2])
+    return result
 
 
 if __name__ == '__main__':

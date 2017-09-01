@@ -29,11 +29,12 @@ import time
 
 
 if __name__=='__main__':
-    while True:
-        try:
-            with open('test.txt', mode='a', encoding='utf-8') as f:
-                f.write(time.strftime( '%Y-%m-%d %X', time.gmtime(time.time())))
-        except Exception as e:
-            print(e)
-            pass
-        time.sleep(15)
+    print('1' > '2')
+    # while True:
+    #     try:
+    #         with open('test.txt', mode='a', encoding='utf-8') as f:
+    #             f.write(time.strftime( '%Y-%m-%d %X', time.gmtime(time.time())))
+    #     except Exception as e:
+    #         print(e)
+    #         pass
+    #     time.sleep(15)

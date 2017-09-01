@@ -20,5 +20,5 @@ def sumOfSubArray(array):
 
 
 if __name__ == '__main__':
-    a = greatestSumOfSubArray([1, 2, 3, 4, -1, 2, -3, 4])
-    print(a)
+    a,b = sumOfSubArray([1, 2, 3, 4, -1, 2, -3, 4])
+    print(a, b)
