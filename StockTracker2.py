@@ -84,6 +84,6 @@ if __name__=="__main__":
         except Exception as e:
             print(e)
             pass
-        time.sleep(15)
+        time.sleep(5)
 
         # 如果当前时间下午15点，则中止

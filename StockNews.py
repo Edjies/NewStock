@@ -65,46 +65,52 @@ def get_last_news_id():
     id = ''
     conn = sqlite3.connect('newstock.db')
     cursor = conn.cursor()
-    cursor.execute('select news_id from cnstock24_gg limit 1')
+    cursor.execute('select news_id from cnstock24_gg order by news_id desc limit 1')
     item = cursor.fetchone()
     if item:
        id = item[0]
     cursor.close()
     conn.commit()
     conn.close()
+    print(id)
     return id
 
 
-
-
-if __name__=='__main__':
-     # init_stock_table()
-    #init_news_list()
-
-
+def analysis():
     conn = sqlite3.connect('newstock.db')
     cursor = conn.cursor()
     cursor.execute(
-    'select stock_code, stock_name, count(*) as count from cnstock24_gg'
-               '  where datetime > \'2017-08-30 00:00:00\' and datetime < \'2017-09-31 00:00:00\''
-               ' group by stock_code'
-               ' having count == 2'
-               ' order by count desc')
+        'select stock_code, stock_name, count(*) as count from cnstock24_gg'
+        '  where datetime > \'2017-08-20 00:00:00\' and datetime < \'2017-09-20 00:00:00\''
+        ' group by stock_code'
+        ' having count >= 2'
+        ' order by count desc')
 
     for item in cursor.fetchall():
         print(item)
 
     cursor.execute(
-    'select bk_code, bk_name, count(*) as count from cnstock24_bk'
-    ' where datetime > \'2017-08-30 00:00:00\' and datetime < \'2017-09-31 00:00:00\''
-    ' group by bk_code'
-    ' having count== 2'
-    ' order by count desc')
+        'select bk_code, bk_name, count(*) as count from cnstock24_bk'
+        ' where datetime > \'2017-08-20 00:00:00\' and datetime < \'2017-09-20 00:00:00\''
+        ' group by bk_code'
+        ' having count>= 2'
+        ' order by count desc'
+    )
 
     for item in cursor.fetchall():
         print(item)
     cursor.close()
     conn.commit()
     conn.close()
+
+
+
+
+if __name__=='__main__':
+    #init_stock_table()
+    init_news_list()
+    #analysis()
+
+
 
 
