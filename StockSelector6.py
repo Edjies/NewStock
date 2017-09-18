@@ -43,7 +43,7 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
 
 @filtrate_high_price
 @filtrate_stop_trade
-def select2(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, min_hsl = 10, max_hsl=100, min_item=120):
+def select2(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, min_item=120):
     """
     根据 换手率选择
     :param stock_list:
@@ -65,6 +65,7 @@ def select2(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, m
             continue
 
         hsl = StockIndicator.hsl(kline, ltgb.get(stock.stock_code, 0))
+        sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
 
 
         if hsl is None:
@@ -75,9 +76,11 @@ def select2(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, m
         #print(sma_hsl_20)
 
             #print(stock.stock_code)
-        if hsl[x_position] > sma_hsl[-1] * 2 and hsl[x_position] > 3 and close[x_position] > sma5[x_position] and close[x_position] > open[x_position]:
+        if hsl[x_position] > sma_hsl[-1] * 2 and hsl[x_position] > 15 and close[x_position] > sma5[x_position] and close[x_position] > open[x_position]:
                 #print(stock)
-                result.append(stock)
+
+                if sma5[-1] > sma10[-1] and sma5[-1] >  sma20[-1]:
+                    result.append(stock)
     return result
 
 if __name__ == '__main__':
@@ -85,10 +88,9 @@ if __name__ == '__main__':
     # position = StockIndicator.position(date, '000001')
     #日线
     result = {}
-    for x in range(-3, -1):
+    for x in range(-10, -1):
         print('x = ', x)
-        stock_list = select2(StockIO.get_stock('sza'), x_position=x, kline_type=StockConfig.kline_type_week,
-                 min_hsl=4, max_hsl=10)
+        stock_list = select2(StockIO.get_stock('sza'), x_position=x, kline_type=StockConfig.kline_type_week)
         print(stock_list)
 
         for stock in stock_list:
