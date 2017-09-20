@@ -83,7 +83,7 @@ def get_kline_from_tencent(stock_list, stock_type):
                 session = requests.Session()
                 session.trust_env = False
                 r = session.get(url)
-                print(r.text)
+                #print(r.text)
                 json_obj = json.loads(r.text)
                 print(json_obj['code'])
                 if json_obj['code'] == 0:
@@ -197,5 +197,5 @@ if __name__ == '__main__':
     download_stock_kline(source_tencent, kline_type_day)
     #download_stock_kline(source_tencent, kline_type_week)
     #download_stock_kline(source_tencent, kline_type_month)
-    # upate_kline_day(sina_node_sh_a, 1)
-    # upate_kline_day(sina_node_sz_a, 1)
+    #upate_kline_day(sina_node_sh_a, 1)
+    #upate_kline_day(sina_node_sz_a, 1)
