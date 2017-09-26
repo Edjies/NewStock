@@ -48,7 +48,7 @@ def get_stock_pool_from_sina(node, page):
     json_obj = json.loads(r.text)
     for item in json_obj['result']['data']['data']:
         stock_list.append(Stock(item['code'], item['name']))
-    print(stock_list)
+    #print(stock_list)
     size = json_obj['result']['data']['status']['pagetatol']
     if page < size:
         stock_list += get_stock_pool_from_sina(node, page + 1)
@@ -91,7 +91,7 @@ def get_kline_from_tencent(stock_list, stock_type):
                         data = json_obj['data'][code]['qfq{}'.format(stock_type)]
                     else:
                         data = json_obj['data'][code].get('{}'.format(stock_type))
-                    print(data)
+                    #print(data)
                     for index, item in enumerate(data):
                         data[index] = item[0:6]
                     save_kline(path, json.dumps(data))
@@ -195,7 +195,7 @@ if __name__ == '__main__':
     #get_stock_pool(source_sina)
     #update_stock_kline(source_tencent, kline_type_day)
     download_stock_kline(source_tencent, kline_type_day)
-    #download_stock_kline(source_tencent, kline_type_week)
+    download_stock_kline(source_tencent, kline_type_week)
     #download_stock_kline(source_tencent, kline_type_month)
     #upate_kline_day(sina_node_sh_a, 1)
     #upate_kline_day(sina_node_sz_a, 1)
