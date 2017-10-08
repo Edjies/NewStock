@@ -43,10 +43,10 @@ if __name__ == '__main__':
     # position = StockIndicator.position(date, '000001')
     #日线
     result = {}
-    for x in range(-6, -1):
+    for x in range(-7, 0):
         print('x = ', x)
         stock_list = select(StockIO.get_stock('sha'), x_position=x, kline_type=StockConfig.kline_type_day,
-                 min_chg=-100, max_chg=100, min_vb=4, max_vb=100)
+                 min_chg=-100, max_chg=100, min_vb=3, max_vb=100)
         print(stock_list)
 
         for stock in stock_list:
