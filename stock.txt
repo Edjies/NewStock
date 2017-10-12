@@ -1,0 +1,27 @@
+
+
+股票上涨的逻辑一定存在一个推动股票上涨的因素：
+
+包括1. 产业周期。 2. 外部事件因素。 3. 市场资金推动  4. 自身发展因素 5. 新型产业的出现  5. 技术K线因素
+
+
+http://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHQNodeData?page=2&num=40&sort=symbol&asc=1&node=chgn_700410&symbol=&_s_r_a=page
+
+
+
+亚夏汽车
+有研新材
+晨光文具
+龙净环保
+力帆股份
+国机汽车
+维力医疗
+卧龙电气
+博威合金
+古越龙山
+东风科技
+金证股份
+	
+放量突破（参考 登海种业， 美都能源） 贝叶斯  热点
+
+ 
