@@ -30,6 +30,10 @@ import time
 
 if __name__=='__main__':
     print('1' > '2')
+    vol = 10
+    sma = 10
+    print(eval('vol < 50 and sma10 == 10'))
+    eval('print(1 + 2)')
     # while True:
     #     try:
     #         with open('test.txt', mode='a', encoding='utf-8') as f:
