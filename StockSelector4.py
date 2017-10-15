@@ -32,32 +32,24 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
         sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
 
         if StockShape.is_lower_shadow(open_[x_position], close[x_position], high[x_position], low[x_position], min_vb=min_vb, ratio=ratio, red=False):
-            if not StockAlgrithm.sumOfSubArray(chg[-15:])[0] > 20:
-
                 print(stock)
                 result.append(stock)
                 # append to file
-                path = '{root}/{name}'.format(root=StockConfig.path_track, name=append_file)
-                with open(path, mode='a', encoding='utf-8') as f:
-                    value = low[-1] + (high[-1] - low[-1]) * 0.3
-                    f.write("{},{},{}\n".format(stock.stock_code, value, high[-1]))
+                # path = '{root}/{name}'.format(root=StockConfig.path_track, name=append_file)
+                # with open(path, mode='a', encoding='utf-8') as f:
+                #     value = low[-1] + (high[-1] - low[-1]) * 0.3
+                #     f.write("{},{},{}\n".format(stock.stock_code, value, high[-1]))
 
     return result
 
 
 if __name__ == '__main__':
-    date = '2017-02-03'
-    position = StockIndicator.position(date, '000001')
-    result = {}
-    for x in range(-4, 0):
-        print('x = ', x)
-        stock_list = select(StockIO.get_stock('level_1'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=6, ratio=0.3)
+    stock_list = []
+    for x in range(-5, 0):
+        stock_list += select(StockIO.get_stock('sha'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=5, ratio=0.4)
+        stock_list += select(StockIO.get_stock('sza'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=5,ratio=0.4)
+    print(stock_list)
 
-        print(stock_list)
+    with open('C:/Users/panha/Desktop/xgfx/1002.txt', mode='a', encoding='utf-8') as f:
         for stock in stock_list:
-            result[stock] = result.get(stock, 0) + 1
-
-    print(sorted(result.items(), key=lambda d: d[1], reverse=True))
-
-
-    #print(down_to(StockIO.get_stock('sha'), duration=60))
+            f.write("{}\n".format(stock.stock_code))
