@@ -183,6 +183,13 @@ def write_stock_pool(stock_pool_name, stock_list):
         for stock in stock_list:
             f.write("{},{}\n".format(stock.stock_code, stock.stock_name))
 
+def update_sina_hy_bk():
+    pass
+
+
+def update_sina_gn_bk():
+    pass
+
 
 if __name__ == '__main__':
     if not os.path.exists(path_kline_day):
@@ -194,7 +201,7 @@ if __name__ == '__main__':
 
     #get_stock_pool(source_sina)
     #update_stock_kline(source_tencent, kline_type_day)
-    download_stock_kline(source_tencent, kline_type_day)
+    #download_stock_kline(source_tencent, kline_type_day)
     download_stock_kline(source_tencent, kline_type_week)
     #download_stock_kline(source_tencent, kline_type_month)
     #upate_kline_day(sina_node_sh_a, 1)
