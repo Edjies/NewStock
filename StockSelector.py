@@ -7,8 +7,9 @@ import numpy as np
 import StockFilterWrapper
 
 @StockFilterWrapper.filtrate_stop_trade
-def select(stock_list, x_position=-1, min_item=120):
+def select(stock_list, x_position=-1, kline_type=StockConfig.kline_type_week, min_item=120):
     """
+    均线选股法
     :param stock_list:
     :param kline_type:
     :param avg:
@@ -17,33 +18,19 @@ def select(stock_list, x_position=-1, min_item=120):
     result = []
     for stock in stock_list:
         try:
-            kline_day = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_day)
-            kline_week = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_week)
+            kline = StockIO.get_kline(stock.stock_code, kline_type=kline_type)
         except:
             continue
-        if kline_week.shape[0] < min_item:
+        if kline.shape[0] < min_item:
             continue
+        open = kline[:, 1].astype(np.float)
+        close = kline[:, 2].astype(np.float)
+        sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
 
-        open_day = kline_day[:, 1].astype(np.float)
-        open_week = kline_week[:, 1].astype(np.float)
-        close_day = kline_day[:, 2].astype(np.float)
-        close_week = kline_week[:, 2].astype(np.float)
-
-        sma5_d, sma10_d, sma20_d = StockIndicator.sma(kline_day, 5, 10, 20)
-        sma5_w, sma10_w, sma20_w = StockIndicator.sma(kline_week, 5, 10, 20)
-
-        # 三线向下， 5 < 10 < 20 and  closeX > openX (x = x_position)
-        if close_week[x_position] < sma5_w[x_position] < sma10_w[x_position] < sma20_w[x_position]:
-            # if sma5_w[x_position - 1] < sma10_w[x_position - 1] < sma20_w[x_position - 1]:
-            #     #if sma10_w[x_position] > close_week[x_position] > sma5_w[x_position] > open_week[x_position]:
-            #     if close_week[x_position] > sma5_w[x_position] and close_week[x_position] > open_week[x_position]:
-            #         if close_week[x_position - 1] > sma5_w[x_position - 1] and close_week[x_position - 1] > open_week[x_position - 1]:
-            #             if np.min(close_week[-min_item: x_position]) == np.min(close_week[x_position - 5: x_position]):
-            #                 print(stock)
-            #                 result.append(stock)
-            #         if x_position == -1 and np.min(close_week[-min_item:] == np.min(close_week[-5:])):
-                        print(stock)
-                        result.append(stock)
+        if sma5[x_position] > sma10[x_position] > sma20[x_position]:
+            if open[x_position] < close[x_position]:
+                print(stock)
+                result.append(stock)
 
 
 
@@ -51,9 +38,44 @@ def select(stock_list, x_position=-1, min_item=120):
 
 
 if __name__ == '__main__':
-    # 均线处决胜负， 胜者向上，败者向下
+
+    result = {}
     for x in range(-3, 0):
         print('x = ', x)
-        print(select(StockIO.get_stock('level_1'), x_position=x))
-    #print(select_2(StockIO.get_stock('sza'), x_position=-1, kline_type=StockConfig.kline_type_week))
-    #print(down_to(StockIO.get_stock('sha'), duration=60))
+        stock_list = select(StockIO.get_stock('sha'), kline_type=StockConfig.kline_type_week, x_position=x)
+        print(stock_list)
+
+        for stock in stock_list:
+            result[stock] = result.get(stock, 0) + 1
+    print(sorted(result.items(), key=lambda d: d[1], reverse=True))
+
+    with open('stock_list.txt', mode='w', encoding='utf-8') as f:
+        for stock in result:
+            if result.get(stock, 0) > 1:
+                f.write(stock.stock_code)
+                f.write('\n')
+
+    # result = {}
+    # for x in range(-5, 0):
+    #     print('x = ', x)
+    #     stock_list = select(StockIO.get_stock('sha'), kline_type=StockConfig.kline_type_week, x_position=x)
+    #     print(stock_list)
+    #
+    #     for stock in stock_list:
+    #         result[stock] = result.get(stock, 0) + 1
+    #
+    # result2 = {}
+    # for x in range(-3, 0):
+    #     print('x = ', x)
+    #     stock_list = select(StockIO.get_stock('sha'), kline_type=StockConfig.kline_type_week, x_position=x)
+    #     print(stock_list)
+    #
+    #     for stock in stock_list:
+    #         result2[stock] = result2.get(stock, 0) + 1
+    #
+    # result3 = {}
+    # for x in result:
+    #     if result.get(x, 0) != result2.get(x, 0):
+    #         result3[x] = result.get(x, 0)
+    #
+    # print(sorted(result3.items(), key=lambda d: d[1], reverse=True))

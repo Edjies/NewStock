@@ -4,89 +4,78 @@ import StockIO
 import StockConfig
 import StockIndicator
 import numpy as np
+import StockFilterWrapper
 
-
-def select_w_5(stock_list):
+@StockFilterWrapper.filtrate_stop_trade
+def select(stock_list, x_position=-1, kline_type=StockConfig.kline_type_week, left_period=5, min_item=120):
     """
-    随机游走模型
+    均线选股法
+    :param stock_list:
+    :param kline_type:
+    :param avg:
     :return:
     """
-    min_item = 120
-    x_position = -1
-    period = 5
-
     result = []
     for stock in stock_list:
         try:
-            kline = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_week)
+            kline = StockIO.get_kline(stock.stock_code, kline_type=kline_type)
         except:
             continue
-        if kline.shape[0] <= min_item:
+        if kline.shape[0] < min_item:
             continue
+        open = kline[:, 1].astype(np.float)
+        close = kline[:, 2].astype(np.float)
+        sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
 
-        open = kline[:, 1].astype(np.float)[:None if x_position == -1 else (x_position + 1)]
-        close = kline[:, 2].astype(np.float)[:None if x_position == -1 else (x_position + 1)]
-        high = kline[:, 3].astype(np.float)[:None if x_position == -1 else (x_position + 1)]
-        low = kline[:, 4].astype(np.float)[:None if x_position == -1 else (x_position + 1)]
-        vb = StockIndicator.vibration(kline)[:None if x_position == -1 else (x_position + 1)][-period:]
-        cg =  (close - open)[-period:]
-        count = 0
-        for index, z in enumerate(vb):
-            if z > 15:
-                count = count + 1
-
-        if count >= 3 and not stock.stock_code.startswith('300'):
-            result.append(stock)
-            print(vb)
-            print(stock)
-
+        for i in range(x_position - 10, x_position):
+            if sma5[i] > sma10[i]:
+                break
+        else:
+            if sma5[x_position] > sma10[x_position] and sma5[x_position - 1] < sma10[x_position - 1]:
+                print(stock)
+                result.append(stock)
     return result
 
-def select_d_5(stock_list):
-    """
-    随机游走模型
-    :return:
-    """
-    min_item = 360
-    x_position = -1
-    period = 6
-
-    result = []
-    for stock in stock_list:
-        try:
-            kline = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_day)
-        except:
-            continue
-        if kline.shape[0] <= min_item:
-            continue
-
-        open = kline[:, 1].astype(np.float)[:None if x_position == -1 else (x_position + 1)]
-        close = kline[:, 2].astype(np.float)[:None if x_position == -1 else (x_position + 1)]
-        high = kline[:, 3].astype(np.float)[:None if x_position == -1 else (x_position + 1)]
-        low = kline[:, 4].astype(np.float)[:None if x_position == -1 else (x_position + 1)]
-        vb = StockIndicator.vibration(kline)[:None if x_position == -1 else (x_position + 1)][-period:]
-        cg =  (close - open)[-period:]
-        count_8 = 0
-        count_4 = 0
-        for index, z in enumerate(vb):
-            if z > 8:
-                count_8 = count_8 + 1
-            if z > 4:
-                count_4 = count_4 + 1
-
-        if count_8 <= 2 and count_4 > 4 and not stock.stock_code.startswith('300'):
-            result.append(stock)
-            print(vb)
-            print(stock)
-
-    return result
 
 if __name__ == '__main__':
-    # 均线处决胜负， 胜者向上，败者向下
-    date = '2017-02-03'
-    position = StockIndicator.position(date, '000001')
-    # for x in range(-6, 0):
+
+    result = {}
+    for x in range(-10, -8):
+        print('x = ', x)
+        stock_list = select(StockIO.get_stock('sha'), kline_type=StockConfig.kline_type_week, x_position=x)
+        print(stock_list)
+
+        for stock in stock_list:
+            result[stock] = result.get(stock, 0) + 1
+    print(sorted(result.items(), key=lambda d: d[1], reverse=True))
+
+    with open('stock_list.txt', mode='w', encoding='utf-8') as f:
+        for stock in result:
+            if result.get(stock, 0) > 1:
+                f.write(stock.stock_code)
+                f.write('\n')
+
+    # result = {}
+    # for x in range(-5, 0):
     #     print('x = ', x)
-    #     print(select(StockIO.get_stock('sza'), x_position=x))
-    print(select_d_5(StockIO.get_stock('sha')))
-    #print(down_to(StockIO.get_stock('sha'), duration=60))
+    #     stock_list = select(StockIO.get_stock('sha'), kline_type=StockConfig.kline_type_week, x_position=x)
+    #     print(stock_list)
+    #
+    #     for stock in stock_list:
+    #         result[stock] = result.get(stock, 0) + 1
+    #
+    # result2 = {}
+    # for x in range(-3, 0):
+    #     print('x = ', x)
+    #     stock_list = select(StockIO.get_stock('sha'), kline_type=StockConfig.kline_type_week, x_position=x)
+    #     print(stock_list)
+    #
+    #     for stock in stock_list:
+    #         result2[stock] = result2.get(stock, 0) + 1
+    #
+    # result3 = {}
+    # for x in result:
+    #     if result.get(x, 0) != result2.get(x, 0):
+    #         result3[x] = result.get(x, 0)
+    #
+    # print(sorted(result3.items(), key=lambda d: d[1], reverse=True))

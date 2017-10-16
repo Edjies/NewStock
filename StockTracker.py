@@ -17,7 +17,7 @@ def track():
     """
     # 读取本地数据
     data = []
-    with open('{}/position_track.txt'.format(StockConfig.path_track), 'r', encoding='utf-8') as f:
+    with open('{}/1_vb_track.txt'.format(StockConfig.path_track), 'r', encoding='utf-8') as f:
         for line in f.readlines():
             if not line.startswith("#"):
                 data.append(line.strip('\n').split(','))

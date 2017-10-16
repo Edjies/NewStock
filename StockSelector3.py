@@ -29,9 +29,11 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
 
         chg = StockIndicator.chg(kline)
         vb = StockIndicator.vibration(kline)
-        sma5, sma10, sma20 = StockIndicator.sma(StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_week), 5, 10, 20)
-        if max_chg > chg[x_position] > min_chg and max_vb > vb[x_position] > min_vb or (chg[x_position] > 9.5 and kline_type == StockConfig.kline_type_day):
-            #if not sma5[x_position] < sma10[x_position] < sma20[x_position]:
+        sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
+        if max_chg > chg[x_position] > min_chg and max_vb > vb[x_position] > min_vb:
+            # 过滤掉单边上涨
+            #if not StockAlgrithm.sumOfSubArray(chg[-10:])[0] > 10:
+            #if sma5[x_position] > sma10[x_position] > sma20[x_position]:
                 print(stock)
                 result.append(stock)
     return result
@@ -41,10 +43,10 @@ if __name__ == '__main__':
     # position = StockIndicator.position(date, '000001')
     #日线
     result = {}
-    for x in range(-6, -3):
+    for x in range(-7, 0):
         print('x = ', x)
-        stock_list = select(StockIO.get_stock('sza'), x_position=x, kline_type=StockConfig.kline_type_day,
-                 min_chg=-100, max_chg=100, min_vb=4, max_vb=100)
+        stock_list = select(StockIO.get_stock('sha'), x_position=x, kline_type=StockConfig.kline_type_day,
+                 min_chg=-100, max_chg=100, min_vb=3, max_vb=100)
         print(stock_list)
 
         for stock in stock_list:
