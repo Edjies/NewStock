@@ -6,6 +6,7 @@ import numpy as np
 import StockConfig
 from tkinter import messagebox
 import time
+from StockUtils import logger
 
 track_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir, os.pardir, 'stock', 'track'))
 def track(track_file='1_vb_track.txt'):
@@ -23,7 +24,8 @@ def track(track_file='1_vb_track.txt'):
                 data.append(line.strip('\n').split(','))
 
     data = np.array(data)
-    print(data)
+    logger.info(data)
+
     # 请求网络数据
     codes = ''
     for code in data[:, 0]:
@@ -36,10 +38,10 @@ def track(track_file='1_vb_track.txt'):
     session = requests.Session()
     session.trust_env = False
     url = 'http://api.money.126.net/data/feed/{}'.format(codes)[:-1]
-    print(url)
     r = session.get(url)
     quote = json.loads(r.text[len('_ntes_quote_callback('): -2])
-    print(data)
+    logger.info(data)
+
     # 分析数据
     result = []
     for target in data:
@@ -77,10 +79,6 @@ if __name__=="__main__":
     while True:
         try:
             track('1_vb_track.txt')
-            # track('track_000.txt')
-            # track('track_002.txt')
-            # track('track_600.txt')
-            # track('track_601.txt')
         except Exception as e:
             print(e)
             pass

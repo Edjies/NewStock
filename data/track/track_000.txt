@@ -1,3 +1,0 @@
-#000
-#cur_price, vol, w_sma_*_vol, d_sma_*_vol,
-000632,

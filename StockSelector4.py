@@ -45,9 +45,9 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
 
 if __name__ == '__main__':
     stock_list = []
-    for x in range(-5, 0):
-        stock_list += select(StockIO.get_stock('sha'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=5, ratio=0.4)
-        stock_list += select(StockIO.get_stock('sza'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=5,ratio=0.4)
+    for x in range(-2, 0):
+        stock_list += select(StockIO.get_stock('sha'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=4, ratio=0.5)
+        stock_list += select(StockIO.get_stock('sza'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=4,ratio=0.5)
     print(stock_list)
 
     with open('C:/Users/panha/Desktop/xgfx/1002.txt', mode='a', encoding='utf-8') as f:
