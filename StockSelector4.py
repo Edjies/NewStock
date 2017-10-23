@@ -32,6 +32,7 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
         sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
 
         if StockShape.is_lower_shadow(open_[x_position], close[x_position], high[x_position], low[x_position], min_vb=min_vb, ratio=ratio, red=False):
+            if sma5[x_position] > sma10[x_position] > sma20[x_position]:
                 print(stock)
                 result.append(stock)
                 # append to file
@@ -45,7 +46,7 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
 
 if __name__ == '__main__':
     stock_list = []
-    for x in range(-2, 0):
+    for x in range(-3, -1):
         stock_list += select(StockIO.get_stock('sha'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=4, ratio=0.5)
         stock_list += select(StockIO.get_stock('sza'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=4,ratio=0.5)
     print(stock_list)

@@ -78,7 +78,7 @@ if __name__=="__main__":
 
     while True:
         try:
-            track('1_vb_track.txt')
+            track('1_price_track.txt')
         except Exception as e:
             print(e)
             pass
