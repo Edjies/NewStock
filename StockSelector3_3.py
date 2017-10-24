@@ -11,7 +11,7 @@ import StockAlgrithm
 @filtrate_high_price
 @filtrate_stop_trade
 def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-3,
-    shadow_min_vb = 3.5, shadow_ratio=0.6,
+    shadow_min_vb = 3.5, shadow_ratio=0.4,
     min_chg=-100, max_chg=100, min_vb = 6, max_vb=20,
     min_item=120):
     """
@@ -45,8 +45,12 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-3,
             result.append(stock)
             continue
 
-        if StockShape.is_shadow(open[x_position], close[x_position], high[x_position], low[x_position],
+        if StockShape.is_lower_shadow(open[x_position], close[x_position], high[x_position], low[x_position],
                                       min_vb=shadow_min_vb, ratio=shadow_ratio, red=False):
+            result.append(stock)
+            continue
+
+        if sma5[x_position] > sma10[x_position] > sma20[x_position] and vb[x_position] > shadow_min_vb:
             result.append(stock)
             continue
 
@@ -54,12 +58,18 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-3,
 
 if __name__ == '__main__':
     result = {}
-    for x in range(-7, -2):
+    for x in range(-5, 0):
         print('x = ', x)
         stock_list = select(StockIO.get_stock('sza'), x_position=x, kline_type=StockConfig.kline_type_day)
         print(stock_list)
 
         for stock in stock_list:
             result[stock] = result.get(stock, 0) + 1
+
+
+    with open('C:/Users/panha/Desktop/xgfx/1002.txt', mode='w', encoding='utf-8') as f:
+        for key in result:
+            if result[key] >= 3:
+                f.write("{}\n".format(key.stock_code))
 
     print(sorted(result.items(), key=lambda d: d[1], reverse=True))
