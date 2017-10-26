@@ -50,8 +50,8 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-3,
             result.append(stock)
             continue
 
-        if sma5[x_position] > sma10[x_position] > sma20[x_position] and vb[x_position] > shadow_min_vb:
-            result.append(stock)
+        # if sma5[x_position] > sma10[x_position] > sma20[x_position] and vb[x_position] > shadow_min_vb:
+        #     result.append(stock)
             continue
 
     return result
@@ -66,10 +66,10 @@ if __name__ == '__main__':
         for stock in stock_list:
             result[stock] = result.get(stock, 0) + 1
 
-
+    print(sorted(result.items(), key=lambda d: d[1], reverse=True))
     with open('C:/Users/panha/Desktop/xgfx/1002.txt', mode='w', encoding='utf-8') as f:
         for key in result:
             if result[key] >= 3:
                 f.write("{}\n".format(key.stock_code))
 
-    print(sorted(result.items(), key=lambda d: d[1], reverse=True))
+
