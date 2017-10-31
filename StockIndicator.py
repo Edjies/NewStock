@@ -1,7 +1,8 @@
 # -*-coding:utf-8 -*-
 import talib
 import numpy as np
-from StockIO import *
+import StockIO
+import StockConfig
 
 """
 StockIndicator used for confirm price movement
@@ -93,6 +94,18 @@ def vibration(kline):
     return np.round(diff / p_close * 100, decimals=2)
 
 
+def entity(kline):
+    """
+    计算k线实体幅度
+    :return:
+    """
+    open = kline[:, 1].astype(np.float)
+    close = kline[:, 2].astype(np.float)
+    high = kline[:, 3].astype(np.float)
+    low = kline[:, 4].astype(np.float)
+    return np.round(abs((open - close) / np.where(open < close, open, close)) * 100, decimals=2)
+
+
 def chg(kline):
     """
     计算涨跌幅
@@ -142,8 +155,8 @@ def chg_per(kline, from_position, to_position=-1):
 
 
 
-def position(date, stock_code, kline_type=kline_type_day):
-    kline = get_kline(stock_code, kline_type)
+def position(date, stock_code, kline_type=StockConfig.kline_type_day):
+    kline = StockIO.get_kline(stock_code, kline_type)
     dates = kline[:, 0]
     length = dates.shape[0]
     if date in dates:
@@ -162,7 +175,6 @@ if __name__ == '__main__':
     # print(chg)
     # print(chg_per)
     #
-    # print(position('2016-12-01', '002040'))
 
-    print(hsl(get_kline('600000', kline_type=kline_type_day), ltgb=2810376.3899))
+    print()
 

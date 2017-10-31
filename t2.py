@@ -12,3 +12,6 @@ session.trust_env = False
 r = session.post(url, data={"page":"1", "num":"20", "sort":"","asc":"0","field0":"stocktype", "field1":"sinahy", "field2":"diyu", "value0":"*","value1":"*",
                             "value2":"*","field3":"ltag", "max3":"26192207", "min3":"1000"}, )
 print(r.text)
+
+
+print('2017-09-12' <= '2017-09-13')

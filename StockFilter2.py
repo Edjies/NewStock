@@ -91,10 +91,9 @@ def find_macd_sx(stock_pool, kline_type, x_position = -1):
     return result
 
 
-def is_jx(fast, slow, x_position, about=False):
+def is_jx(fast, slow, x_position):
     if fast.shape[0] - 1 > abs(x_position):
-        if slow[x_position - 1] > fast[x_position - 1] and (fast[x_position] < slow[x_position] if about else fast[x_position] > slow[x_position])\
-                and fast[x_position] > fast[x_position - 1] and (slow[x_position] > slow[x_position - 1] or about):
+        if slow[x_position - 1] >= fast[x_position - 1] and (fast[x_position] >= slow[x_position]):
             return True
     return False
 
