@@ -67,8 +67,13 @@ if __name__ == '__main__':
     # print(sorted(result.items(), key=lambda d: d[1], reverse=True))
     date = '2017-10-09'
     position = StockIndicator.position(date, '000001')
-    stock_list = select(StockIO.get_stock('sza'), x_position=-1, kline_type=StockConfig.kline_type_day)
+    stock_list = select(StockIO.get_stock('sza'), x_position=-2, kline_type=StockConfig.kline_type_day)
+    stock_list2 = select(StockIO.get_stock('sha'), x_position=-2, kline_type=StockConfig.kline_type_day)
+    stock_list = stock_list + stock_list2
     print(len(stock_list))
+    with open('C:/Users/panha/Desktop/xgfx/1002.txt', mode='w', encoding='utf-8') as f:
+        for key in stock_list:
+            f.write("{}\n".format(key.stock_code))
 
 
 
