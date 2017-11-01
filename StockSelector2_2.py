@@ -33,17 +33,18 @@ def select(stock_list, x_position=-1, w_x_position= -1, kline_type=StockConfig.k
         #if w_sma5[w_x_position] > w_sma10[w_x_position]:
         if close[x_position] > sma5[x_position] and close[x_position] > sma10[x_position] and close[x_position] > sma20[x_position]:
             if sma5[x_position] > sma10[x_position]:
-                count = 0
-                add = False
-                while count < 6:
-                    if StockFilter2.is_jx(sma5, sma10, x_position - count):
-                        add = True
-                        break
-                    count += 1
+                if close[x_position] > np.max(close[x_position - 5: x_position]):
+                    count = 0
+                    add = False
+                    while count < 6:
+                        if StockFilter2.is_jx(sma5, sma10, x_position - count):
+                            add = True
+                            break
+                        count += 1
 
-                if add:
-                    print(stock)
-                    result.append(stock)
+                    if add:
+                        print(stock)
+                        result.append(stock)
 
     return result
 
@@ -66,7 +67,7 @@ if __name__ == '__main__':
     # print(sorted(result.items(), key=lambda d: d[1], reverse=True))
     date = '2017-10-09'
     position = StockIndicator.position(date, '000001')
-    stock_list = select(StockIO.get_stock('sha'), x_position=-2, kline_type=StockConfig.kline_type_week)
+    stock_list = select(StockIO.get_stock('sza'), x_position=-1, kline_type=StockConfig.kline_type_day)
     print(len(stock_list))
 
 
