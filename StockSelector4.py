@@ -5,6 +5,7 @@ import StockConfig
 import StockIndicator
 import StockShape
 import numpy as np
+import StockFilter2
 import StockAlgrithm
 from StockFilterWrapper import filtrate_stop_trade
 
@@ -23,7 +24,7 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
         if kline.shape[0] < min_item:
             continue
 
-        open_ = kline[:, 1].astype(np.float)
+        open = kline[:, 1].astype(np.float)
         close = kline[:, 2].astype(np.float)
         high = kline[:, 3].astype(np.float)
         low = kline[:, 4].astype(np.float)
@@ -31,10 +32,11 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
         chg = StockIndicator.chg(kline)
         sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
 
-        if StockShape.is_lower_shadow(open_[x_position], close[x_position], high[x_position], low[x_position], min_vb=min_vb, ratio=ratio, red=False):
-            if sma5[x_position] > sma10[x_position] > sma20[x_position]:
-                print(stock)
-                result.append(stock)
+        if StockShape.is_lower_shadow(open[x_position], close[x_position], high[x_position], low[x_position], min_vb=min_vb, ratio=ratio, red=True):
+            print(stock)
+            result.append(stock)
+                # print(stock)
+                # result.append(stock)
                 # append to file
                 # path = '{root}/{name}'.format(root=StockConfig.path_track, name=append_file)
                 # with open(path, mode='a', encoding='utf-8') as f:
@@ -46,9 +48,9 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
 
 if __name__ == '__main__':
     stock_list = []
-    for x in range(-3, -1):
-        stock_list += select(StockIO.get_stock('sha'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=4, ratio=0.5)
-        stock_list += select(StockIO.get_stock('sza'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=4,ratio=0.5)
+    for x in range(-1, 0):
+        stock_list += select(StockIO.get_stock('sha'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=5, ratio=0.6)
+        stock_list += select(StockIO.get_stock('sza'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=5,ratio=0.6)
     print(stock_list)
 
     with open('C:/Users/panha/Desktop/xgfx/1002.txt', mode='a', encoding='utf-8') as f:

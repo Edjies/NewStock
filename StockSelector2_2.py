@@ -27,24 +27,23 @@ def select(stock_list, x_position=-1, w_x_position= -1, kline_type=StockConfig.k
             continue
         open = kline[:, 1].astype(np.float)
         close = kline[:, 2].astype(np.float)
-        sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
+        sma5, sma10, sma20, sma30= StockIndicator.sma(kline, 5, 10, 20, 30)
         w_close = w_kline[:, 2].astype(np.float)
-        w_sma5, w_sma10, w_sma20 = StockIndicator.sma(w_kline, 5, 10, 20)
         #if w_sma5[w_x_position] > w_sma10[w_x_position]:
-        if close[x_position] > sma5[x_position] and close[x_position] > sma10[x_position] and close[x_position] > sma20[x_position]:
-            if sma5[x_position] > sma10[x_position]:
+        if close[x_position] > sma5[x_position] and close[x_position] > sma10[x_position] and close[x_position] > sma20[x_position] and close[x_position] > sma30[x_position]:
                 if close[x_position] > np.max(close[x_position - 5: x_position]):
-                    count = 0
-                    add = False
-                    while count < 6:
-                        if StockFilter2.is_jx(sma5, sma10, x_position - count):
-                            add = True
-                            break
-                        count += 1
+                    if close[x_position] > open[x_position]:
+                        count = 0
+                        add = False
+                        while count < 2:
+                            if StockFilter2.is_jx(sma5, sma10, x_position - count) or StockFilter2.is_jx(sma5, sma20, x_position - count) or StockFilter2.is_jx(sma10, sma20, x_position - count):
+                                add = True
+                                break
+                            count += 1
 
-                    if add:
-                        print(stock)
-                        result.append(stock)
+                        if add:
+                            print(stock)
+                            result.append(stock)
 
     return result
 
@@ -67,8 +66,8 @@ if __name__ == '__main__':
     # print(sorted(result.items(), key=lambda d: d[1], reverse=True))
     date = '2017-10-09'
     position = StockIndicator.position(date, '000001')
-    stock_list = select(StockIO.get_stock('sza'), x_position=-2, kline_type=StockConfig.kline_type_day)
-    stock_list2 = select(StockIO.get_stock('sha'), x_position=-2, kline_type=StockConfig.kline_type_day)
+    stock_list = select(StockIO.get_stock('sza'), x_position=-6, kline_type=StockConfig.kline_type_month)
+    stock_list2 = select(StockIO.get_stock('sha'), x_position=-6, kline_type=StockConfig.kline_type_month)
     stock_list = stock_list + stock_list2
     print(len(stock_list))
     with open('C:/Users/panha/Desktop/xgfx/1002.txt', mode='w', encoding='utf-8') as f:
