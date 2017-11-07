@@ -5,6 +5,7 @@ import StockConfig
 import StockIndicator
 import numpy as np
 import StockFilterWrapper
+import StockAlgrithm
 import StockFilter2
 
 @StockFilterWrapper.filtrate_stop_trade
@@ -28,9 +29,11 @@ def select(stock_list, x_position=-1, min_item=10):
         close = kline[:, 2].astype(np.float)
         sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
         vb = StockIndicator.vibration(kline)
-        if sma5[x_position] < sma10[x_position] < sma20[x_position]:
-            if close[x_position] > sma5[x_position]:
-                if vb[x_position] > 5:
+        chg = StockIndicator.chg(kline)
+        chg_compress = StockAlgrithm.compress_array(chg)
+        if chg[x_position] < 0:
+            if sma5[x_position] > sma10[x_position] and  sma5[x_position] > sma20[x_position]:
+                if chg_compress[-2] + chg_compress[-1] > 0:
                     print(stock)
                     result.append(stock)
 

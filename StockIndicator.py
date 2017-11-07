@@ -121,6 +121,14 @@ def chg(kline):
     return np.round(diff / p_close * 100, decimals=2)
 
 
+def cjl(kline):
+    _cjl = kline[:, 5].astype(np.float)
+    for i, v in enumerate(_cjl):
+        if _cjl[i] < 10000000:
+            _cjl[i] = _cjl[i] * 100
+    return _cjl
+
+
 def hsl(kline, ltgb):
     """
     计算换手率
@@ -136,6 +144,10 @@ def hsl(kline, ltgb):
             cjl[i] = cjl[i] * 100
 
     return np.round(cjl/(ltgb * 100), decimals=2)
+
+
+
+
 
 
 def chg_per(kline, from_position, to_position=-1):

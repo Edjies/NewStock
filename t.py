@@ -29,16 +29,8 @@ import time
 
 
 if __name__=='__main__':
-    print('1' > '2')
-    vol = 10
-    sma = 10
-    print(eval('vol < 50 and sma10 == 10'))
-    eval('print(1 + 2)')
-    # while True:
-    #     try:
-    #         with open('test.txt', mode='a', encoding='utf-8') as f:
-    #             f.write(time.strftime( '%Y-%m-%d %X', time.gmtime(time.time())))
-    #     except Exception as e:
-    #         print(e)
-    #         pass
-    #     time.sleep(15)
+
+    nparr = np.array([[1, 2, 3, 4, -1],[4, 3, 2, 1, -1], [5, 6, 7, 8, 1]], dtype=np.int)
+    nparr = nparr + [1, 2, 3, 4, 5]
+    for i in nparr:
+        i
