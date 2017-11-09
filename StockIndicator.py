@@ -70,6 +70,15 @@ def sma(kline, *timeperiod):
     return [talib.SMA(close, timeperiod=i) for i in timeperiod]
 
 
+def asma(arr, *timeperiod):
+    """
+    :param kline:
+    :param timeperiod:
+    :return:
+    """
+    return [talib.SMA(arr, timeperiod=i) for i in timeperiod]
+
+
 def ema(kline, *timeperiod):
     """
     :param kline:
