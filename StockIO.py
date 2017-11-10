@@ -25,11 +25,11 @@ def get_stock(name):
     return l_stock_list
 
 
-def save_stock(stock_pool_name, stock_list, root=path_track, message=None):
+def save_stock(stock_pool_name, stock_list, root=path_track, message=None, mode='w'):
     path = '{root}/{name}'.format(root=root, name=stock_pool_name)
-    with open(path, mode='w', encoding='utf-8') as f:
+    with open(path, mode=mode, encoding='utf-8') as f:
         if message is not None:
-            f.write('#' + message)
+            f.write('#' + message + '\n')
         for stock in stock_list:
             f.write("{},{}\n".format(stock.stock_code, stock.stock_name))
 

@@ -66,16 +66,24 @@ if __name__ == '__main__':
     #
     # print(sorted(result.items(), key=lambda d: d[1], reverse=True))
     stock_list = []
-    for x in range(-3, 0):
-        stock_list += select(StockIO.get_stock('sza'), x_position=x, kline_type=StockConfig.kline_type_day)
-        stock_list += select(StockIO.get_stock('sha'), x_position=x, kline_type=StockConfig.kline_type_day)
+    for x in range(-5, 0):
+        stock_list1 = select(StockIO.get_stock('sza'), x_position=x, kline_type=StockConfig.kline_type_day)
+        stock_list2 = select(StockIO.get_stock('sha'), x_position=x, kline_type=StockConfig.kline_type_day)
+        for x in stock_list1:
+            if x not in stock_list:
+                stock_list.append(x)
+        for x in stock_list2:
+            if x not in stock_list:
+                stock_list.append(x)
     #stock_list = select(StockIO.get_stock('sza'), x_position=-2, kline_type=StockConfig.kline_type_day)
     #stock_list2 = select(StockIO.get_stock('sha'), x_position=-2, kline_type=StockConfig.kline_type_day)
     #stock_list = stock_list + stock_list2
+    print( stock_list)
     print(len(stock_list))
-    with open('C:/Users/panha/Desktop/xgfx/1002.txt', mode='w', encoding='utf-8') as f:
-        for key in stock_list:
-            f.write("{}\n".format(key.stock_code))
+    StockIO.save_stock('d_sma_jx', stock_list, mode='a', message='2017-10-06 to 2017-10-10')
+    # with open('C:/Users/panha/Desktop/xgfx/1002.txt', mode='w', encoding='utf-8') as f:
+    #     for key in stock_list:
+    #         f.write("{}\n".format(key.stock_code))
 
 
 
