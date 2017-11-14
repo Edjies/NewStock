@@ -41,14 +41,15 @@ def track(track_file='1_vb_track.txt'):
     r = session.get(url)
     quote = json.loads(r.text[len('_ntes_quote_callback('): -2])
     logger.info(data)
+    print(url)
 
     # 分析数据
     result = []
     for target in data:
         print(target)
         target_code = target[0]
-        low_to = float(0 if target[1] == '' else float(target[1]))
-        high_to = float(0 if target[2] == '' else float(target[2]))
+        low_to = float(0 if target[2] == '' else float(target[2]))
+        high_to = float(0 if target[3] == '' else float(target[3]))
         if target_code.startswith('6'):
             target_code = '0' + target_code
         else:

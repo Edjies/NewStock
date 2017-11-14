@@ -7,14 +7,14 @@ import csv
 from StockFilterWrapper import filtrate_stop_trade
 
 
-def get_stock(name):
+def get_stock(name, path=path_stock):
     """
     :param name: pool_name
     :return: list<Stock>
     """
     print('get_stock({})'.format(name))
     l_stock_list = []
-    if not os.path.exists('{}/{}'.format(path_stock, name)):
+    if not os.path.exists('{}/{}'.format(path, name)):
         return []
     with open('{}/{}'.format(path_stock, name), 'r', encoding='utf-8') as f:
         for stock in f:
@@ -44,6 +44,12 @@ def get_kline(stock_code, kline_type):
     with open(path, mode='r', encoding='utf-8') as f:
         return np.array(json.loads(f.readline()))
 
+
+def get_kline_map(code_list, kline_type):
+    result = {}
+    for code in code_list:
+        result[code] = get_kline(code, kline_type)
+    return result
 
 def save_kline(stock_code, kline_type, kline):
     """

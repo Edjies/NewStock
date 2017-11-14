@@ -5,7 +5,7 @@ from StockConfig import Stock
 import numpy as np
 import talib
 import time
-
+import datetime
 # l1 = [Stock('1', 'a'), Stock('2', 'b'), Stock('3', 'c')]
 # l2 = [Stock('1', 'a'), Stock('3', 'c')]
 #
@@ -30,7 +30,4 @@ import time
 
 if __name__=='__main__':
 
-    nparr = np.array([[1, 2, 3, 4, -1],[4, 3, 2, 1, -1], [5, 6, 7, 8, 1]], dtype=np.int)
-    nparr = nparr + [1, 2, 3, 4, 5]
-    for i in nparr:
-        i
+    print(datetime.datetime.strptime('2017/11/20 11:22:23', '%Y/%m/%d %H:%M:%S'))
