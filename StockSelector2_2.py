@@ -84,5 +84,9 @@ if __name__ == '__main__':
         for key in stock_list:
             f.write("{},{}, , , , ,\n".format(key.stock_code, key.stock_name))
 
+    with open('C:/Users/panha/Desktop/xgfx/1002.txt', mode='w', encoding='utf-8') as f:
+        for key in stock_list:
+            f.write("{}\n".format(key.stock_code))
+
 
 
