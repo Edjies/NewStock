@@ -48,8 +48,8 @@ def track(track_file='1_vb_track.txt'):
     for target in data:
         print(target)
         target_code = target[0]
-        low_to = float(0 if target[2] == '' else float(target[2]))
-        high_to = float(0 if target[3] == '' else float(target[3]))
+        low_to = float(0 if target[2].strip() == '' else float(target[2]))
+        high_to = float(100 if target[3].strip() == '' else float(target[3]))
         if target_code.startswith('6'):
             target_code = '0' + target_code
         else:
