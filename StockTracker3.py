@@ -77,7 +77,7 @@ def track():
             new_date = datetime.datetime.strptime(quote[target_code]['time'], '%Y/%m/%d %H:%M:%S').strftime('%Y-%m-%d')
             kline = kline_map[target_code[1:]]
             old_kline_item = kline[-1]
-            new_kline_item = np.array([new_date, quote[target_code]['open'], quote[target_code]['yestclose'], quote[target_code]['high'], quote[target_code]['low'], quote[target_code]['volume']])
+            new_kline_item = np.array([new_date, quote[target_code]['open'], old_kline_item[-3], quote[target_code]['high'], quote[target_code]['low'], quote[target_code]['volume']])
             if(new_kline_item[-1] == old_kline_item[-1]):
                 kline[-1] = new_kline_item
             else:
@@ -87,10 +87,10 @@ def track():
 
             if target_sma == 0:
                 sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
-                price = quote[target_code]['low']
-                if((price < sma10[-1] or price < sma10[-2])and sma10[-1] < sma20[-1]):
+                price = quote[target_code]['price']
+                if((price < sma10[-1] or price < sma10[-2])and sma10[-1] > sma20[-1]):
                     message = target_code[1:] + '跌破10日线:'
-                elif((price < sma20[-1] or price < sma20[-2])and sma20[-1] < sma10[-1]):
+                elif((price < sma20[-1] or price < sma20[-2])and sma20[-1] > sma10[-1]):
                     message = target_code[1:] + '跌破20日线:'
                 else:
                     message = ''
@@ -98,7 +98,7 @@ def track():
                     messagebox.showinfo("tips", message)
             else:
                 sma, = StockIndicator.sma(kline, target_sma)
-                price = quote[target_code]['low']
+                price = quote[target_code]['price']
                 if (price < sma[-1]):
                     message = target_code[1:] + '跌破{}日线:'.format(target_sma)
                 elif (price < sma[-1]):
