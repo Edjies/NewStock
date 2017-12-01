@@ -65,11 +65,11 @@ def track():
         r = session.get(url)
         quote = json.loads(r.text[len('_ntes_quote_callback('): -2])
 
-        print(data)
         # 分析数据
         for target in cur_track_data:
             target_code = target[0]
             target_sma = 0 if target[2].strip() == '' else int(target[2])
+            target_price = 0 if target[3].strip() == '' else float(target[3])
             if target_code.startswith('6'):
                 target_code = '0' + target_code
             else:
@@ -83,22 +83,12 @@ def track():
             else:
                 kline = np.row_stack((kline, new_kline_item))
 
-            print(kline[-1])
+            #print(kline[-1])
 
-            if target_sma == 0:
-                sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
-                price = quote[target_code]['price']
-                if((price < sma10[-1] or price < sma10[-2])and sma10[-1] > sma20[-1]):
-                    message = target_code[1:] + '跌破10日线:'
-                elif((price < sma20[-1] or price < sma20[-2])and sma20[-1] > sma10[-1]):
-                    message = target_code[1:] + '跌破20日线:'
-                else:
-                    message = ''
-                if message != '':
-                    messagebox.showinfo("tips", message)
-            else:
+            # sma track
+            if target_sma != 0:
                 sma, = StockIndicator.sma(kline, target_sma)
-                price = quote[target_code]['price']
+                price = quote[target_code]['low']
                 if (price < sma[-1]):
                     message = target_code[1:] + '跌破{}日线:'.format(target_sma)
                 elif (price < sma[-1]):
@@ -107,6 +97,32 @@ def track():
                     message = ''
                 if message != '':
                     messagebox.showinfo("tips", message)
+
+            # price track
+            if target_price != 0:
+                cur_price = float(quote[target_code]['price'])
+                message = ''
+                if target_price < 0 and cur_price <= abs(target_price):
+                    message = target_code[1:] + '跌到目标价位:' + str(abs(target_price))
+                elif target_price > 0 and cur_price >= abs(target_price):
+                    message = target_code[1:] + '涨到目标价位:' + str(abs(target_price))
+
+                if message != '':
+                    messagebox.showinfo("tips", message)
+
+            # sma 自由追踪
+            # else:
+            #     sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
+            #     price = quote[target_code]['low']
+            #     if ((price < sma10[-1] or price < sma10[-2]) and sma10[-1] > sma20[-1]):
+            #         message = target_code[1:] + '跌破10日线:'
+            #     elif ((price < sma20[-1] or price < sma20[-2]) and sma20[-1] > sma10[-1]):
+            #         message = target_code[1:] + '跌破20日线:'
+            #     else:
+            #         message = ''
+            #     if message != '':
+            #         messagebox.showinfo("tips", message)
+
 
 
 

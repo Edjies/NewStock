@@ -80,7 +80,7 @@ if __name__ == '__main__':
 
 
     with open('data/track/2_sma_track.txt', mode='a', encoding='utf-8') as f:
-        f.write('#2017-11-15\n')
+        f.write('\n#2017-11-29\n')
         for key in stock_list:
             f.write("{},{}, , , , ,\n".format(key.stock_code, key.stock_name))
 
