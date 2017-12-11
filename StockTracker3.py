@@ -110,6 +110,26 @@ def track():
                 if message != '':
                     messagebox.showinfo("tips", message)
 
+
+            # 默认会跟踪自动筛选出来的 sma变化
+            if target_price == 0 and target_sma == 0:
+                sma5, sma10, sma20, sma30 = StockIndicator.sma(kline, 5, 10, 20, 30)
+                price = quote[target_code]['low']
+                # sma5 条件
+                # if (price < sma5[-1] and sma5[-1] > sma10[-1] > sma20[-1] > sma30[-1]):
+                #     message = target_code[1:] + '跌破{}日线:'.format(sma5[-1])
+                # sma10 条件
+                if (price < sma10[-1] and sma10[-1] > sma20[-1] > sma30[-1]):
+                    message = target_code[1:] + '跌破{}日线:'.format(10)
+                # sma20 条件
+                elif (price < sma20[-1] and sma5[-1] > sma20[-1] and sma10[-1] > sma20[-1]) and sma20[-1] > sma30[
+                    -1]:
+                    message = target_code[1:] + '跌破{}日线:'.format(20)
+                else:
+                    message = ''
+                if message != '':
+                    messagebox.showinfo("tips", message)
+
             # sma 自由追踪
             # else:
             #     sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
@@ -134,8 +154,8 @@ def track():
 
     # tk显示结果
 
-if __name__=="__main__":
 
+def startTrack():
     while True:
         try:
             print(track())
@@ -144,5 +164,9 @@ if __name__=="__main__":
             print(e)
             pass
         time.sleep(10)
+
+
+if __name__=="__main__":
+    startTrack()
 
         # 如果当前时间下午15点，则中止

@@ -67,6 +67,24 @@ def get_stock_list(x_position):
     return stock_list
 
 
+def delete_invalid_record():
+    with open('{}/{}'.format(StockConfig.path_track, '2_sma_track.txt'), 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+
+    with open('{}/{}'.format(StockConfig.path_track, '2_sma_track.txt'), 'w', encoding='utf-8') as f:
+        for line in lines:
+            if not line.startswith("#") and not '\n' == line:
+                data = line.strip('\n').split(',')
+                stock_code = data[0]
+                kline = StockIO.get_kline(stock_code, StockConfig.kline_type_day)
+                sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
+                if sma5[-1] < sma10[-1] and sma5[-1] < sma20[-1]:
+                    continue
+                f.write(line)
+            else:
+                f.write(line)
+
+
 if __name__ == '__main__':
     stock_list_1 = get_stock_list(-1)
     stock_list_2 = get_stock_list(-2)
@@ -80,9 +98,11 @@ if __name__ == '__main__':
 
 
     with open('data/track/2_sma_track.txt', mode='a', encoding='utf-8') as f:
-        f.write('\n#2017-11-29\n')
+        f.write('\n#2017-12-11\n')
         for key in stock_list:
             f.write("{},{}, , , , ,\n".format(key.stock_code, key.stock_name))
+
+    delete_invalid_record()
 
     with open('C:/Users/panha/Desktop/xgfx/1002.txt', mode='w', encoding='utf-8') as f:
         for key in stock_list:
