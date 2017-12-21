@@ -78,7 +78,7 @@ def delete_invalid_record():
                 stock_code = data[0]
                 kline = StockIO.get_kline(stock_code, StockConfig.kline_type_week)
                 sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
-                if sma5[-1] < sma20[-1] and sma10[-1] < sma20[-1]:
+                if sma5[-1] < sma10[-1] and sma5[-1] < sma20[-1]:
                     continue
                 f.write(line)
             else:
@@ -86,11 +86,11 @@ def delete_invalid_record():
 
 
 if __name__ == '__main__':
-    for i in range(1, 5):
-        stock_list_1 = get_stock_list(i - 5)
-        stock_list_2 = get_stock_list(i - 6)
-        stock_list_3 = get_stock_list(i - 7)
-        stock_list_4 = get_stock_list(i - 8)
+    for i in range(-10, 0):
+        stock_list_1 = get_stock_list(i)
+        stock_list_2 = get_stock_list(i - 1)
+        stock_list_3 = get_stock_list(i - 2)
+        stock_list_4 = get_stock_list(i - 3)
 
         stock_list = [x for x in stock_list_1 if x not in (stock_list_2 + stock_list_3 + stock_list_4)]
 
@@ -105,9 +105,9 @@ if __name__ == '__main__':
 
     delete_invalid_record()
 
-    with open('C:/Users/panha/Desktop/xgfx/1002.txt', mode='w', encoding='utf-8') as f:
-        for key in stock_list:
-            f.write("{}\n".format(key.stock_code))
+    # with open('C:/Users/panha/Desktop/xgfx/1002.txt', mode='w', encoding='utf-8') as f:
+    #     for key in stock_list:
+    #         f.write("{}\n".format(key.stock_code))
 
 
 

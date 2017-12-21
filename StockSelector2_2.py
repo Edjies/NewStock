@@ -76,10 +76,13 @@ def delete_invalid_record():
             if not line.startswith("#") and not '\n' == line:
                 data = line.strip('\n').split(',')
                 stock_code = data[0]
+                target_sma = 0 if data[2].strip() == '' else int(data[2])
+                target_price = 0 if data[3].strip() == '' else float(data[3])
                 kline = StockIO.get_kline(stock_code, StockConfig.kline_type_day)
                 sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
-                if sma5[-1] < sma10[-1] and sma5[-1] < sma20[-1]:
-                    continue
+                if target_sma == 0 and target_price == 0:
+                    if sma5[-1] < sma10[-1] and sma5[-1] < sma20[-1]:
+                        continue
                 f.write(line)
             else:
                 f.write(line)
@@ -97,10 +100,26 @@ if __name__ == '__main__':
     print(len(stock_list))
 
 
+    stock_code_list = []
+    with open('data/track/1_sma_track.txt', mode='r', encoding='utf-8') as f:
+        lines = f.readlines()
+        for line in lines:
+            if not line.startswith("#") and not '\n' == line:
+                data = line.strip('\n').split(',')
+                stock_code_list.append(data[0])
+
+    with open('data/track/2_sma_track.txt', mode='r', encoding='utf-8') as f:
+        lines = f.readlines()
+        for line in lines:
+            if not line.startswith("#") and not '\n' == line:
+                data = line.strip('\n').split(',')
+                stock_code_list.append(data[0])
+
     with open('data/track/2_sma_track.txt', mode='a', encoding='utf-8') as f:
-        f.write('\n#2017-12-11\n')
+        f.write('\n#2017-12-20\n')
         for key in stock_list:
-            f.write("{},{}, , , , ,\n".format(key.stock_code, key.stock_name))
+            if key.stock_code not in stock_code_list:
+                f.write("{},{}, , , , ,\n".format(key.stock_code, key.stock_name))
 
     delete_invalid_record()
 

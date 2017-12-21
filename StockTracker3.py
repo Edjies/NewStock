@@ -13,12 +13,17 @@ import StockIndicator
 track_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir, os.pardir, 'stock', 'track'))
 
 
-def get_track_data(track_file):
+def get_track_data():
     data = []
-    with open('{}/{}'.format(StockConfig.path_track, track_file), 'r', encoding='utf-8') as f:
+    with open('{}/{}'.format(StockConfig.path_track, '2_sma_track.txt'), 'r', encoding='utf-8') as f:
         for line in f.readlines():
             if not line.startswith("#") and not '\n' == line:
                 data.append(line.strip('\n').split(','))
+
+    # with open('{}/{}'.format(StockConfig.path_track, '1_sma_track.txt'), 'r', encoding='utf-8') as f:
+    #     for line in f.readlines():
+    #         if not line.startswith("#") and not '\n' == line:
+    #             data.append(line.strip('\n').split(','))
 
     data = np.array(data)
     return data
@@ -36,7 +41,7 @@ def track():
     :return:
     """
     # 读取本地数据
-    track_data = get_track_data('2_sma_track.txt')
+    track_data = get_track_data()
     kline_map = StockIO.get_kline_map(track_data[:, 0], StockConfig.kline_type_day)
 
     page = 0
@@ -112,18 +117,17 @@ def track():
 
 
             # 默认会跟踪自动筛选出来的 sma变化
-            if target_price == 0 and target_sma == 0:
+            if target_sma == 0:
                 sma5, sma10, sma20, sma30 = StockIndicator.sma(kline, 5, 10, 20, 30)
                 price = quote[target_code]['low']
                 # sma5 条件
                 # if (price < sma5[-1] and sma5[-1] > sma10[-1] > sma20[-1] > sma30[-1]):
                 #     message = target_code[1:] + '跌破{}日线:'.format(sma5[-1])
                 # sma10 条件
-                if (price < sma10[-1] and sma10[-1] > sma20[-1] > sma30[-1]):
+                if price < sma10[-1] and float(kline[-2][4]) > sma10[-2] and sma5[-1] > sma10[-1] > sma20[-1] > sma30[-1]:
                     message = target_code[1:] + '跌破{}日线:'.format(10)
                 # sma20 条件
-                elif (price < sma20[-1] and sma5[-1] > sma20[-1] and sma10[-1] > sma20[-1]) and sma20[-1] > sma30[
-                    -1]:
+                elif price < sma20[-1] and float(kline[-2][4]) > sma20[-2] and sma5[-1] > max(sma20[-1], sma30[-1]) and sma10[-1] > max(sma20[-1], sma30[-1]):
                     message = target_code[1:] + '跌破{}日线:'.format(20)
                 else:
                     message = ''
