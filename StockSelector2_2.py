@@ -88,6 +88,20 @@ def delete_invalid_record():
                 f.write(line)
 
 
+def toTDX():
+    stock_code_list = []
+    with open('{}/{}'.format(StockConfig.path_track, '2_sma_track.txt'), 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+        for line in lines:
+            if not line.startswith("#") and not '\n' == line:
+                data = line.strip('\n').split(',')
+                stock_code_list.append(data[0])
+    with open('C:/Users/panha/Desktop/xgfx/1002.txt', mode='w', encoding='utf-8') as f:
+        for stock_code in stock_code_list:
+            f.write("{}\n".format(stock_code))
+
+
+
 if __name__ == '__main__':
     stock_list_1 = get_stock_list(-1)
     stock_list_2 = get_stock_list(-2)
@@ -123,9 +137,7 @@ if __name__ == '__main__':
 
     delete_invalid_record()
 
-    with open('C:/Users/panha/Desktop/xgfx/1002.txt', mode='w', encoding='utf-8') as f:
-        for key in stock_list:
-            f.write("{}\n".format(key.stock_code))
+    toTDX()
 
 
 
