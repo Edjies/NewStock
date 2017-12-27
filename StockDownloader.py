@@ -189,7 +189,7 @@ def update_sina_hy_bk():
 
 def update_sina_gn_bk():
     pass
-
+4
 
 if __name__ == '__main__':
     if not os.path.exists(path_kline_day):

@@ -92,12 +92,12 @@ def track():
 
             # sma track
             if target_sma != 0:
-                sma, = StockIndicator.sma(kline, target_sma)
+                sma, = StockIndicator.sma(kline, abs(target_sma))
                 price = quote[target_code]['low']
-                if (price < sma[-1]):
-                    message = target_code[1:] + '跌破{}日线:'.format(target_sma)
-                elif (price < sma[-1]):
-                    message = target_code[1:] + '跌破{}日线:'.format(target_sma)
+                if (target_sma<0 and price < sma[-1]):
+                    message = target_code[1:] + '跌破{}日线:'.format(abs(target_sma))
+                elif (target_sma > 0 and price > sma[-1]):
+                    message = target_code[1:] + '突破{}日线:'.format(abs(target_sma))
                 else:
                     message = ''
                 if message != '':
@@ -172,5 +172,4 @@ def startTrack():
 
 if __name__=="__main__":
     startTrack()
-
-        # 如果当前时间下午15点，则中止
+    # 如果当前时间下午15点，则中止
