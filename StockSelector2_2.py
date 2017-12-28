@@ -130,7 +130,7 @@ if __name__ == '__main__':
                 stock_code_list.append(data[0])
 
     with open('data/track/2_sma_track.txt', mode='a', encoding='utf-8') as f:
-        f.write('\n#2017-12-25\n')
+        f.write('\n#2017-12-28\n')
         for key in stock_list:
             if key.stock_code not in stock_code_list:
                 f.write("{},{}, , , , , , ,\n".format(key.stock_code, key.stock_name))
