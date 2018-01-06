@@ -90,7 +90,7 @@ def delete_invalid_record():
 
 def toTDX(date):
     stock_code_list = []
-    with open('{}/{}'.format(StockConfig.path_track, '2_sma_track.txt'), 'r', encoding='utf-8') as f:
+    with open('{}/{}'.format(StockConfig.path_track, '{}.txt'), 'r', encoding='utf-8') as f:
         lines = f.readlines()
         for line in lines:
             if not line.startswith("#") and not '\n' == line:
@@ -103,7 +103,7 @@ def toTDX(date):
 
 
 if __name__ == '__main__':
-    position = -5
+    position = -1
     date = '2018-01-05'
     stock_list_1 = get_stock_list(position)
     stock_list_2 = get_stock_list(position - 1)
@@ -137,9 +137,12 @@ if __name__ == '__main__':
             if key.stock_code not in stock_code_list:
                 f.write("{},{}, , , , , , ,\n".format(key.stock_code, key.stock_name))
 
-    delete_invalid_record()
+    with open('data/track/{}.txt'.format(date), mode='w', encoding='utf-8') as f:
+        for key in stock_list:
+            if key.stock_code not in stock_code_list:
+                f.write("{}\n".format(key.stock_code))
 
-    toTDX(date)
+    delete_invalid_record()
 
 
 
