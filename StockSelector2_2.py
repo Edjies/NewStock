@@ -88,7 +88,7 @@ def delete_invalid_record():
                 f.write(line)
 
 
-def toTDX():
+def toTDX(date):
     stock_code_list = []
     with open('{}/{}'.format(StockConfig.path_track, '2_sma_track.txt'), 'r', encoding='utf-8') as f:
         lines = f.readlines()
@@ -96,17 +96,19 @@ def toTDX():
             if not line.startswith("#") and not '\n' == line:
                 data = line.strip('\n').split(',')
                 stock_code_list.append(data[0])
-    with open('C:/Users/panha/Desktop/xgfx/1002.txt', mode='w', encoding='utf-8') as f:
+    with open('{}/{}.txt'.format(StockConfig.path_track, date), mode='w', encoding='utf-8') as f:
         for stock_code in stock_code_list:
             f.write("{}\n".format(stock_code))
 
 
 
 if __name__ == '__main__':
-    stock_list_1 = get_stock_list(-1)
-    stock_list_2 = get_stock_list(-2)
-    stock_list_3 = get_stock_list(-3)
-    stock_list_4 = get_stock_list(-4)
+    position = -5
+    date = '2018-01-05'
+    stock_list_1 = get_stock_list(position)
+    stock_list_2 = get_stock_list(position - 1)
+    stock_list_3 = get_stock_list(position - 2)
+    stock_list_4 = get_stock_list(position - 3)
 
     stock_list = [x for x in stock_list_1 if x not in (stock_list_2 + stock_list_3 + stock_list_4)]
 
@@ -130,14 +132,14 @@ if __name__ == '__main__':
                 stock_code_list.append(data[0])
 
     with open('data/track/2_sma_track.txt', mode='a', encoding='utf-8') as f:
-        f.write('\n#2017-12-28\n')
+        f.write('\n#{}\n'.format(date))
         for key in stock_list:
             if key.stock_code not in stock_code_list:
                 f.write("{},{}, , , , , , ,\n".format(key.stock_code, key.stock_name))
 
     delete_invalid_record()
 
-    toTDX()
+    toTDX(date)
 
 
 

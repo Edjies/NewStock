@@ -73,8 +73,10 @@ def track():
         # 分析数据
         for target in cur_track_data:
             target_code = target[0]
-            target_sma = 0 if target[2].strip() == '' else int(target[2])
-            target_price = 0 if target[3].strip() == '' else float(target[3])
+            target_sma_down = 0 if target[2].strip() == '' else int(target[2])
+            target_sma_up = 0 if target[3].strip() == '' else int(target[3])
+            target_price_down = 0 if target[4].strip() == '' else float(target[4])
+            target_price_up = 0 if target[5].strip() == '' else float(target[5])
             if target_code.startswith('6'):
                 target_code = '0' + target_code
             else:
@@ -90,34 +92,50 @@ def track():
 
             #print(kline[-1])
 
-            # sma track
-            if target_sma != 0:
-                sma, = StockIndicator.sma(kline, abs(target_sma))
+            # 跌破目标均线
+            if target_sma_down != 0:
+                message = ''
+                sma, = StockIndicator.sma(kline, abs(target_sma_down))
                 price = quote[target_code]['low']
-                if (target_sma<0 and price < sma[-1]):
-                    message = target_code[1:] + '跌破{}日线:'.format(abs(target_sma))
-                elif (target_sma > 0 and price > sma[-1]):
-                    message = target_code[1:] + '突破{}日线:'.format(abs(target_sma))
-                else:
-                    message = ''
+                if (price < sma[-1]):
+                    message = target_code[1:] + '跌破{}日线:'.format(abs(target_sma_down))
                 if message != '':
                     messagebox.showinfo("tips", message)
 
-            # price track
-            if target_price != 0:
+            # 突破目标均线
+            if target_sma_up != 0:
+                message = ''
+                sma, = StockIndicator.sma(kline, abs(target_sma_up))
+                price = quote[target_code]['low']
+                if (price > sma[-1]):
+                    message = target_code[1:] + '突破{}日线:'.format(abs(target_sma_up))
+
+                if message != '':
+                    messagebox.showinfo("tips", message)
+
+            # 跌到目标价位
+            if target_price_down != 0:
+                message = ''
                 cur_price = float(quote[target_code]['price'])
                 message = ''
-                if target_price < 0 and cur_price <= abs(target_price):
-                    message = target_code[1:] + '跌到目标价位:' + str(abs(target_price))
-                elif target_price > 0 and cur_price >= abs(target_price):
-                    message = target_code[1:] + '涨到目标价位:' + str(abs(target_price))
+                if cur_price <= abs(target_price_down):
+                    message = target_code[1:] + '跌到目标价位:' + str(abs(target_price_down))
+                if message != '':
+                    messagebox.showinfo("tips", message)
 
+            # 涨到目标价位
+            if target_price_up != 0:
+                message = ''
+                cur_price = float(quote[target_code]['price'])
+                message = ''
+                if cur_price >= abs(target_price_up):
+                    message = target_code[1:] + '涨到目标价位:' + str(abs(target_price_down))
                 if message != '':
                     messagebox.showinfo("tips", message)
 
 
             # 默认会跟踪自动筛选出来的 sma变化
-            if target_sma == 0:
+            if target_sma_down == 0 and target_price_down == 0 and target_sma_up == 0 and target_price_up == 0:
                 sma5, sma10, sma20, sma30 = StockIndicator.sma(kline, 5, 10, 20, 30)
                 price = quote[target_code]['low']
                 # sma5 条件
