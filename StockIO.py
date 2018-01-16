@@ -24,6 +24,22 @@ def get_stock(name, path=path_stock):
                     l_stock_list.append(Stock(stock[0], stock[1]))
     return l_stock_list
 
+def get_stock_from_track(name, path=path_track):
+    """
+    :param name: pool_name
+    :return: list<Stock>
+    """
+    print('get_stock({})'.format(name))
+    l_stock_list = []
+    if not os.path.exists('{}/{}'.format(path, name)):
+        return []
+    with open('{}/{}'.format(path, name), 'r', encoding='utf-8') as f:
+        for line in f.readlines():
+            if not line.startswith("#") and not '\n' == line:
+                data = line.strip('\n').split(',')
+                l_stock_list.append(Stock(data[0], data[1]))
+    return l_stock_list
+
 
 def save_stock(stock_pool_name, stock_list, root=path_track, message=None, mode='w'):
     path = '{root}/{name}'.format(root=root, name=stock_pool_name)

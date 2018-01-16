@@ -6,6 +6,7 @@ import numpy as np
 import talib
 import time
 import datetime
+import requests
 # l1 = [Stock('1', 'a'), Stock('2', 'b'), Stock('3', 'c')]
 # l2 = [Stock('1', 'a'), Stock('3', 'c')]
 #
@@ -29,5 +30,17 @@ import datetime
 
 
 if __name__=='__main__':
+    #url = 'http://192.168.1.115/backend/web/index-app.php'
+    url = 'http://120.77.233.154/DST/backend/web/index-app.php'
+    data = {'_loginkey': '8d6e0a3a9ac8fbf328439b5fdc5cf2b4',
+            'curlng':'113.955454',
+            'curlat':'22.547684',
+            'keyword':'1号站',
+            'act':'charge-station-new_search-with-keyword',
+            'ver':'android2.0.4',
+            #'r':'interfaces/charge-station-new/search-keyword'
+            }
 
-    print(datetime.datetime.strptime('2017/11/20 11:22:23', '%Y/%m/%d %H:%M:%S'))
+    r = requests.post(url,data)
+    print(r.text)
+
