@@ -31,13 +31,15 @@ import requests
 
 if __name__=='__main__':
     #url = 'http://192.168.1.115/backend/web/index-app.php'
-    url = 'http://120.77.233.154/DST/backend/web/index-app.php'
-    data = {'_loginkey': '8d6e0a3a9ac8fbf328439b5fdc5cf2b4',
-            'curlng':'113.955454',
-            'curlat':'22.547684',
-            'keyword':'1号站',
-            'act':'charge-station-new_search-with-keyword',
-            'ver':'android2.0.4',
+    url = 'http://120.25.209.72/index-app.php'
+    data = {
+        #'_loginkey': '4a4815ef961500a7b47902abd09937f7',
+            'act':'charge_get-charge-record',
+            'ver':'android2.1.3',
+            'mobile':'13545230029',
+            'rows':'10',
+            'page':'1'
+
             #'r':'interfaces/charge-station-new/search-keyword'
             }
 

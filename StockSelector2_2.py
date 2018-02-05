@@ -23,10 +23,14 @@ def select(stock_list, x_position=-1, w_x_position= -1, kline_type=StockConfig.k
         try:
             kline = StockIO.get_kline(stock.stock_code, kline_type=kline_type)
             w_kline = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_week)
-        except:
+        except Exception as e:
+            print(e)
             continue
         if kline.shape[0] < min_item:
             continue
+
+        if stock.stock_code == '002419':
+            print('aa')
         open = kline[:, 1].astype(np.float)
         close = kline[:, 2].astype(np.float)
         sma5, sma10, sma20, sma30, sma60= StockIndicator.sma(kline, 5, 10, 20, 30, 60)
@@ -45,6 +49,14 @@ def select(stock_list, x_position=-1, w_x_position= -1, kline_type=StockConfig.k
                                 break
                             count += 1
 
+                        if add:
+                            max_exceed = 5
+                            while close[x_position] > np.max(close[x_position - max_exceed : x_position]):
+                                max_exceed+=1
+                                if max_exceed > 200:
+                                    break
+
+                            stock.max_exceed=max_exceed
                         if add:
                             print(stock)
                             result.append(stock)
@@ -104,7 +116,7 @@ def toTDX(date):
 
 if __name__ == '__main__':
     position = -3
-    date = '2018-01-05'
+    date = '2018-01-26'
     stock_list_1 = get_stock_list(position)
     stock_list_2 = get_stock_list(position - 1)
     stock_list_3 = get_stock_list(position - 2)
@@ -112,8 +124,9 @@ if __name__ == '__main__':
 
     stock_list = [x for x in stock_list_1 if x not in (stock_list_2 + stock_list_3 + stock_list_4)]
 
-    print(stock_list)
+    print(sorted(stock_list, key=lambda stock: stock.max_exceed, reverse=True))
     print(len(stock_list))
+
 
 
     stock_code_list = []
