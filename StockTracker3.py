@@ -129,7 +129,7 @@ def track():
                 cur_price = float(quote[target_code]['price'])
                 message = ''
                 if cur_price >= abs(target_price_up):
-                    message = target_code[1:] + '涨到目标价位:' + str(abs(target_price_down))
+                    message = target_code[1:] + '涨到目标价位:' + str(abs(target_price_up))
                 if message != '':
                     messagebox.showinfo("tips", message)
 

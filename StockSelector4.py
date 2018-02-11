@@ -30,11 +30,13 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
         low = kline[:, 4].astype(np.float)
         vb = StockIndicator.vibration(kline)
         chg = StockIndicator.chg(kline)
+        cjl = StockIndicator.cjl(kline)
         sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
 
         if StockShape.is_lower_shadow(open[x_position], close[x_position], high[x_position], low[x_position], min_vb=min_vb, ratio=ratio, red=True):
-            print(stock)
-            result.append(stock)
+            if cjl[x_position] > cjl[x_position - 1]:
+                print(stock)
+                result.append(stock)
                 # print(stock)
                 # result.append(stock)
                 # append to file
@@ -48,8 +50,8 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
 
 if __name__ == '__main__':
     stock_list = []
-    for x in range(-2, 0):
-        stock_list += select(StockIO.get_stock_from_track('2_sma_track.txt'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=5, ratio=0.4)
+    for x in range(-1, 0):
+        stock_list += select(StockIO.get_stock('sza'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=5, ratio=0.5)
         #stock_list += select(StockIO.get_stock('sza'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=5,ratio=0.6)
     print(stock_list)
 
