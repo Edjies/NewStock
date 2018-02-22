@@ -113,8 +113,8 @@ def toTDX(date):
 
 
 if __name__ == '__main__':
-    position = -1
-    date = '2018-02-06'
+    position = -3
+    date = '2018-02-12'
     stock_list_1 = get_stock_list(position)
     stock_list_2 = get_stock_list(position - 1)
     stock_list_3 = get_stock_list(position - 2)
