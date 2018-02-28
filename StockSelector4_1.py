@@ -28,7 +28,7 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
         high = kline[:, 3].astype(np.float)
         low = kline[:, 4].astype(np.float)
         chg = StockIndicator.chg(kline)
-        sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
+        #sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
 
         if StockShape.is_shadow(open[x_position], close[x_position], high[x_position], low[x_position], min_vb=min_vb, ratio=ratio, red=False):
             if not StockAlgrithm.sumOfSubArray(chg[-15:])[0] > 15:

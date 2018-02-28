@@ -1,6 +1,10 @@
 # -*-coding:utf-8 -*-
-import talib
+try:
+    import talib
+except ImportError:
+    pass
 import numpy as np
+import pandas as pd
 import StockIO
 import StockConfig
 
@@ -67,16 +71,22 @@ def sma(kline, *timeperiod):
     :return:
     """
     close = kline[:, 2].astype(np.float)
-    return [talib.SMA(close, timeperiod=i) for i in timeperiod]
+    return [_sma(close, timeperiod=i) for i in timeperiod]
 
 
-def asma(arr, *timeperiod):
+def _sma(nparr, timeperiod):
+    # r = [np.round((sum(nparr[index-timeperiod+1:index + 1])/timeperiod if timeperiod <= (index + 1) else 0), 2) for index, i in enumerate(nparr)]
+    # return np.array(r)
+    return pd.rolling_mean(nparr, timeperiod)
+
+
+def asma(nparr, *timeperiod):
     """
     :param kline:
     :param timeperiod:
     :return:
     """
-    return [talib.SMA(arr, timeperiod=i) for i in timeperiod]
+    return [_sma(nparr, timeperiod=i) for i in timeperiod]
 
 
 def ema(kline, *timeperiod):
@@ -190,12 +200,15 @@ def position(date, stock_code, kline_type=StockConfig.kline_type_day):
 
 
 if __name__ == '__main__':
-    # sma5, sma10 = sma(get_kline('601611', kline_type=kline_type_day), 5, 10)
+    sma5, sma10 = sma(StockIO.get_kline('000001', kline_type=StockConfig.kline_type_day), 5, 10)
+    print(type(sma5))
+    print(sma5)
+    print(sma10)
     #
     # chg, chg_per = chg_per(get_kline('002040', kline_type_day), from_position=-4, to_position=-1)
     # print(chg)
     # print(chg_per)
     #
 
-    print()
+
 

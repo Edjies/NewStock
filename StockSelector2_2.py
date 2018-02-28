@@ -22,7 +22,6 @@ def select(stock_list, x_position=-1, w_x_position= -1, kline_type=StockConfig.k
     for stock in stock_list:
         try:
             kline = StockIO.get_kline(stock.stock_code, kline_type=kline_type)
-            w_kline = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_week)
         except Exception as e:
             print(e)
             continue
@@ -33,8 +32,9 @@ def select(stock_list, x_position=-1, w_x_position= -1, kline_type=StockConfig.k
         close = kline[:, 2].astype(np.float)
         sma5, sma10, sma20, sma30, sma60= StockIndicator.sma(kline, 5, 10, 20, 30, 60)
         cjl = StockIndicator.cjl(kline)
-        w_close = w_kline[:, 2].astype(np.float)
-        #if w_sma5[w_x_position] > w_sma10[w_x_position]:
+        #过滤掉成交量小于1.5个亿的
+        if cjl[x_position] * close[x_position] < 150000000:
+            continue
         if close[x_position] > sma5[x_position] > sma10[x_position] and close[x_position] > sma20[x_position]:
                 if close[x_position] > np.max(close[x_position - 8: x_position]):
                     if cjl[x_position] > np.max(cjl[x_position - 8: x_position]):
@@ -113,8 +113,8 @@ def toTDX(date):
 
 
 if __name__ == '__main__':
-    position = -3
-    date = '2018-02-12'
+    position = -2
+    date = '2018-02-27'
     stock_list_1 = get_stock_list(position)
     stock_list_2 = get_stock_list(position - 1)
     stock_list_3 = get_stock_list(position - 2)
