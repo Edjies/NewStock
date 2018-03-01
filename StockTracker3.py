@@ -139,39 +139,18 @@ def track():
                 sma5, sma10, sma20, sma30 = StockIndicator.sma(kline, 5, 10, 20, 30)
                 price = quote[target_code]['low']
                 # sma5 条件
-                # if (price < sma5[-1] and sma5[-1] > sma10[-1] > sma20[-1] > sma30[-1]):
-                #     message = target_code[1:] + '跌破{}日线:'.format(sma5[-1])
+                if price < sma5[-1]:
+                   message = target_code[1:] + '跌破{}日线:'.format(5)
                 # sma10 条件
-                if price < sma10[-1] and float(kline[-2][4]) > sma10[-2] and sma5[-1] > sma10[-1] > sma20[-1] > sma30[-1]:
+                elif price < sma10[-1]:
                     message = target_code[1:] + '跌破{}日线:'.format(10)
                 # sma20 条件
-                elif price < sma20[-1] and float(kline[-2][4]) > sma20[-2] and sma5[-1] > max(sma20[-1], sma30[-1]) and sma10[-1] > max(sma20[-1], sma30[-1]):
+                elif price < sma20[-1]:
                     message = target_code[1:] + '跌破{}日线:'.format(20)
                 else:
                     message = ''
                 if message != '':
                     messagebox.showinfo("tips", message)
-
-            # sma 自由追踪
-            # else:
-            #     sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
-            #     price = quote[target_code]['low']
-            #     if ((price < sma10[-1] or price < sma10[-2]) and sma10[-1] > sma20[-1]):
-            #         message = target_code[1:] + '跌破10日线:'
-            #     elif ((price < sma20[-1] or price < sma20[-2]) and sma20[-1] > sma10[-1]):
-            #         message = target_code[1:] + '跌破20日线:'
-            #     else:
-            #         message = ''
-            #     if message != '':
-            #         messagebox.showinfo("tips", message)
-
-
-
-
-
-            # # analysis
-            # if cur_price >= price_uts or cur_price <= price_dtb:
-            #     result.append([target[0], cur_price, price_uts, price_dtb, 's' if cur_price >= price_uts else 'b', datetime.datetime.now().strftime('%H:%m')])
     return result
 
     # tk显示结果
