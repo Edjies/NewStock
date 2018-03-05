@@ -189,7 +189,7 @@ def update_sina_hy_bk():
 
 def update_sina_gn_bk():
     pass
-4
+
 
 if __name__ == '__main__':
     if not os.path.exists(path_kline_day):
@@ -199,7 +199,7 @@ if __name__ == '__main__':
     if not os.path.exists(path_kline_month):
         os.makedirs(path_kline_month)
 
-    get_stock_pool(source_sina)
+    #get_stock_pool(source_sina)
     #update_stock_kline(source_tencent, kline_type_day)
     download_stock_kline(source_tencent, kline_type_day)
     #download_stock_kline(source_tencent, kline_type_week)

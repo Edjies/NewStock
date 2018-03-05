@@ -113,37 +113,37 @@ def toTDX():
 
 
 if __name__ == '__main__':
-    # position = -2
-    # date = '2018-02-27'
-    # stock_list_1 = get_stock_list(position)
-    # stock_list_2 = get_stock_list(position - 1)
-    # stock_list_3 = get_stock_list(position - 2)
-    # stock_list_4 = get_stock_list(position - 3)
-    #
-    # stock_list = [x for x in stock_list_1 if x not in (stock_list_2 + stock_list_3 + stock_list_4)]
-    #
-    # print(sorted(stock_list, key=lambda stock: stock.max_exceed, reverse=True))
-    # print(len(stock_list))
-    #
-    #
-    #
-    # stock_code_list = []
-    #
-    #
-    # with open('data/track/2_sma_track.txt', mode='a', encoding='utf-8') as f:
-    #     f.write('\n#{}\n'.format(date))
-    #     for key in stock_list:
-    #         if key.stock_code not in stock_code_list:
-    #             f.write("{},{}, , , , , , ,\n".format(key.stock_code, key.stock_name))
-    #
-    # with open('data/track/{}.txt'.format(date), mode='w', encoding='utf-8') as f:
-    #     for key in stock_list:
-    #         if key.stock_code not in stock_code_list:
-    #             f.write("{}\n".format(key.stock_code))
-    #
-    # delete_invalid_record()
+    position = -3
+    date = '2018-03-01'
+    stock_list_1 = get_stock_list(position)
+    stock_list_2 = get_stock_list(position - 1)
+    stock_list_3 = get_stock_list(position - 2)
+    stock_list_4 = get_stock_list(position - 3)
 
-    toTDX()
+    stock_list = [x for x in stock_list_1 if x not in (stock_list_2 + stock_list_3 + stock_list_4)]
+
+    print(sorted(stock_list, key=lambda stock: stock.max_exceed, reverse=True))
+    print(len(stock_list))
+
+
+
+    stock_code_list = []
+
+
+    with open('data/track/2_sma_track.txt', mode='a', encoding='utf-8') as f:
+        f.write('\n#{}\n'.format(date))
+        for key in stock_list:
+            if key.stock_code not in stock_code_list:
+                f.write("{},{}, , , , , , ,\n".format(key.stock_code, key.stock_name))
+
+    with open('data/track/{}.txt'.format(date), mode='w', encoding='utf-8') as f:
+        for key in stock_list:
+            if key.stock_code not in stock_code_list:
+                f.write("{}\n".format(key.stock_code))
+
+    delete_invalid_record()
+
+    #toTDX()
 
 
 

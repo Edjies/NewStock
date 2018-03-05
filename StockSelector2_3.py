@@ -12,7 +12,7 @@ import time
 @StockFilterWrapper.filtrate_stop_trade
 def select(stock_list, x_position=-1, w_x_position= -1, kline_type=StockConfig.kline_type_week, min_item=120):
     """
-    均线选股法(辅以振幅， 涨幅， 形态)
+    均线选股法
     :param stock_list:
     :param kline_type:
     :param avg:
@@ -32,17 +32,21 @@ def select(stock_list, x_position=-1, w_x_position= -1, kline_type=StockConfig.k
         close = kline[:, 2].astype(np.float)
         sma5, sma10, sma20, sma30, sma60= StockIndicator.sma(kline, 5, 10, 20, 30, 60)
         cjl = StockIndicator.cjl(kline)
-        if close[x_position] > sma5[x_position] > sma10[x_position] and close[x_position] > sma20[x_position]:
+        #过滤掉成交量小于2个亿的
+        if cjl[x_position] * close[x_position] < 200000000:
+            continue
+        if close[x_position] > sma5[x_position] > sma10[x_position] > sma30[x_position]:
                 if close[x_position] > np.max(close[x_position - 8: x_position]):
                     if cjl[x_position] > np.max(cjl[x_position - 8: x_position]):
                         count = 0
-                        add = False
-                        while count < 4:
-                            if StockFilter2.is_jx(sma5, sma10, x_position - count):
-
-                                add = True
-                                break
-                            count += 1
+                        add = True
+                        # add = False
+                        # while count < 4:
+                        #     if StockFilter2.is_jx(sma5, sma10, x_position - count):
+                        #
+                        #         add = True
+                        #         break
+                        #     count += 1
 
                         if add:
                             max_exceed = 5
@@ -95,30 +99,30 @@ def delete_invalid_record():
                 f.write(line)
 
 
-def toTDX(date):
+def toTDX():
     stock_code_list = []
-    with open('{}/{}'.format(StockConfig.path_track, '{}.txt'), 'r', encoding='utf-8') as f:
+    with open('{}/{}'.format(StockConfig.path_track, '2_sma_track.txt'), 'r', encoding='utf-8') as f:
         lines = f.readlines()
         for line in lines:
             if not line.startswith("#") and not '\n' == line:
                 data = line.strip('\n').split(',')
                 stock_code_list.append(data[0])
-    with open('{}/{}.txt'.format(StockConfig.path_track, date), mode='w', encoding='utf-8') as f:
+    with open('{}/{}.txt'.format(StockConfig.path_track, 'zixuan'), mode='w', encoding='utf-8') as f:
         for stock_code in stock_code_list:
             f.write("{}\n".format(stock_code))
 
 
 
 if __name__ == '__main__':
-    position = -1
+    position = -2
     date = '2018-02-28'
-    stock_list_1 = get_stock_list(position)
-    stock_list_2 = get_stock_list(position - 1)
-    stock_list_3 = get_stock_list(position - 2)
-    stock_list_4 = get_stock_list(position - 3)
-
-    stock_list = [x for x in stock_list_1 if x not in (stock_list_2 + stock_list_3 + stock_list_4)]
-
+    # stock_list_1 = get_stock_list(position)
+    # stock_list_2 = get_stock_list(position - 1)
+    # stock_list_3 = get_stock_list(position - 2)
+    # stock_list_4 = get_stock_list(position - 3)
+    #
+    # stock_list = [x for x in stock_list_1 if x not in (stock_list_2 + stock_list_3 + stock_list_4)]
+    stock_list = get_stock_list(position)
     print(sorted(stock_list, key=lambda stock: stock.max_exceed, reverse=True))
     print(len(stock_list))
 
@@ -139,6 +143,8 @@ if __name__ == '__main__':
                 f.write("{}\n".format(key.stock_code))
 
     delete_invalid_record()
+
+    #toTDX()
 
 
 
