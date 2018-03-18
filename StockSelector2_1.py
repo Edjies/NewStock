@@ -5,9 +5,6 @@ import StockConfig
 import StockIndicator
 import numpy as np
 import StockFilterWrapper
-import StockFilter2
-import datetime
-import time
 
 @StockFilterWrapper.filtrate_stop_trade
 def select(stock_list, x_position=-1, kline_type=StockConfig.kline_type_week, min_item=120):
@@ -28,90 +25,46 @@ def select(stock_list, x_position=-1, kline_type=StockConfig.kline_type_week, mi
             continue
         open = kline[:, 1].astype(np.float)
         close = kline[:, 2].astype(np.float)
-        sma5, sma10, sma20, sma30= StockIndicator.sma(kline, 5, 10, 20, 30)
-        cjl = StockIndicator.cjl(kline)
-        if sma5[x_position] > sma10[x_position] > sma20[x_position] > sma30[x_position]:
-            result.append(stock)
+        high = kline[:, 3].astype(np.float)
+        sma5, sma10, sma20, sma60 = StockIndicator.sma(kline, 5, 10, 20, 60)
+        if not (close[x_position] > sma5[x_position] > sma10[x_position] and sma5[x_position] > sma20[x_position]):
+            continue
+        if not close[x_position] > max(np.max(open[x_position - 20 : x_position]), np.max(close[x_position - 20 : x_position])):
+            continue
+
+        print(stock)
+        result.append(stock)
+
     return result
 
 
-def get_stock_list(x_position):
-    stock_list = []
-
-    stock_list1 = select(StockIO.get_stock('sza'), x_position=x_position, kline_type=StockConfig.kline_type_day)
-    stock_list2 = select(StockIO.get_stock('sha'), x_position=x_position, kline_type=StockConfig.kline_type_day)
-    for x in stock_list1:
-        if x not in stock_list:
-            stock_list.append(x)
-    for x in stock_list2:
-        if x not in stock_list:
-            stock_list.append(x)
-
-    return stock_list
-
-
-def delete_invalid_record():
-    with open('{}/{}'.format(StockConfig.path_track, '1_sma_track.txt'), 'r', encoding='utf-8') as f:
-        lines = f.readlines()
-
-    with open('{}/{}'.format(StockConfig.path_track, '1_sma_track.txt'), 'w', encoding='utf-8') as f:
-        for line in lines:
-            if not line.startswith("#") and not '\n' == line:
-                data = line.strip('\n').split(',')
-                stock_code = data[0]
-                target_sma = 0 if data[2].strip() == '' else int(data[2])
-                target_price = 0 if data[3].strip() == '' else float(data[3])
-                kline = StockIO.get_kline(stock_code, StockConfig.kline_type_day)
-                sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
-                if target_sma == 0 and target_price == 0:
-                    if sma5[-1] < sma10[-1] and sma5[-1] < sma20[-1]:
-                        continue
-                f.write(line)
-            else:
-                f.write(line)
-
-
-
-def enter(x_position):
-    stock_list = get_stock_list(x_position)
-    # stock_list_2 = get_stock_list(-2)
-    # stock_list_3 = get_stock_list(-3)
-    # stock_list_4 = get_stock_list(-4)
-    #
-    # stock_list = [x for x in stock_list_1 if x not in (stock_list_2 + stock_list_3 + stock_list_4)]
-    #
-    # print(stock_list)
-    # print(len(stock_list))
-    stock_code_list = []
-    with open('data/track/1_sma_track.txt', mode='r', encoding='utf-8') as f:
-        lines = f.readlines()
-        for line in lines:
-            if not line.startswith("#") and not '\n' == line:
-                data = line.strip('\n').split(',')
-                stock_code_list.append(data[0])
-
-    with open('data/track/2_sma_track.txt', mode='r', encoding='utf-8') as f:
-        lines = f.readlines()
-        for line in lines:
-            if not line.startswith("#") and not '\n' == line:
-                data = line.strip('\n').split(',')
-                stock_code_list.append(data[0])
-
-    with open('data/track/1_sma_track.txt', mode='a', encoding='utf-8') as f:
-        f.write('\n#2017-12-08\n')
-        for key in stock_list:
-            if key.stock_code not in stock_code_list:
-                f.write("{},{}, , , , ,\n".format(key.stock_code, key.stock_name))
-
-    delete_invalid_record()
-
 if __name__ == '__main__':
-    for x in range(-5, 0):
-        enter(x)
+    # 该选股方法 每天要过滤的形态：
 
-    # with open('C:/Users/panha/Desktop/xgfx/1002.txt', mode='w', encoding='utf-8') as f:
-    #     for key in stock_list:
-    #         f.write("{}\n".format(key.stock_code))
+    position = -1
+    date = '2018-03-12'
+    # 过滤重复的
+    stock_code_list = []
+    with open('{}/{}'.format(StockConfig.path_track, 'zixuan_w.txt'), 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+        for line in lines:
+            if not line.startswith("#") and not '\n' == line:
+                data = line.strip('\n')
+                stock_code_list.append(data)
+
+    new_list = select(StockIO.get_stock('sza'), x_position=position, kline_type=StockConfig.kline_type_week)
+    new_list += select(StockIO.get_stock('sha'), x_position=position, kline_type=StockConfig.kline_type_week)
+    # 新结果
+    result_list = [x.stock_code for x in new_list if x.stock_code not in stock_code_list]
+    with open('{}/{}.txt'.format(StockConfig.path_track, 'zixuan_w'), mode='a', encoding='utf-8') as f:
+        f.write('#{}\n'.format(date))
+        for stock_code in result_list:
+            f.write("{}\n".format(stock_code))
+
+    with open('{}/{}.txt'.format(StockConfig.path_track, 'today_w'), mode='w', encoding='utf-8') as f:
+        f.write('\n#{}\n'.format(date))
+        for stock_code in result_list:
+            f.write("{}\n".format(stock_code))
 
 
 

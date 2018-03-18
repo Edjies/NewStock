@@ -7,7 +7,7 @@ import numpy as np
 import StockFilterWrapper
 
 @StockFilterWrapper.filtrate_stop_trade
-def select(stock_list, x_position=-1, kline_type=StockConfig.kline_type_week, min_item=120):
+def select(stock_list, x_position=-1, kline_type=StockConfig.kline_type_week, duration=30, min_item=120):
     """
     均线选股法
     :param stock_list:
@@ -25,11 +25,11 @@ def select(stock_list, x_position=-1, kline_type=StockConfig.kline_type_week, mi
             continue
         open = kline[:, 1].astype(np.float)
         close = kline[:, 2].astype(np.float)
-        sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
-        if not sma5[x_position] > sma10[x_position] > sma20[x_position]:
+        high = kline[:, 3].astype(np.float)
+        sma5, sma10, sma20, sma60 = StockIndicator.sma(kline, 5, 10, 20, 60)
+        if not (close[x_position] > sma5[x_position] > sma10[x_position] and sma5[x_position] > sma20[x_position] and sma5[x_position] > sma60[x_position]):
             continue
-
-        if not close[x_position] > sma10[x_position]:
+        if not close[x_position] > max(np.max(open[x_position - duration : x_position]), np.max(close[x_position - duration : x_position])):
             continue
 
         print(stock)
@@ -39,21 +39,31 @@ def select(stock_list, x_position=-1, kline_type=StockConfig.kline_type_week, mi
 
 
 if __name__ == '__main__':
-    result={}
-    for x in range(-10, 0):
-        print('x = ', x)
-        stock_list = select(StockIO.get_stock('sha'), x_position=x, kline_type=StockConfig.kline_type_week)
-        print(stock_list)
+    # 该选股方法 每天要过滤的形态：
+    for x in range(-1, 0):
+        position = x
+        date = position
+        # 过滤重复的
+        stock_code_list = []
+        with open('{}/{}'.format(StockConfig.path_track, 'zixuan.txt'), 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+            for line in lines:
+                if not line.startswith("#") and not '\n' == line:
+                    data = line.strip('\n')
+                    stock_code_list.append(data)
 
-        for stock in stock_list:
-            result[stock] = result.get(stock, 0) + 1
+        new_list = select(StockIO.get_stock('week_tendency'), x_position=position, kline_type=StockConfig.kline_type_day)
+        # 新结果
+        result_list = [x.stock_code for x in new_list if x.stock_code not in stock_code_list]
+        with open('{}/{}.txt'.format(StockConfig.path_track, 'zixuan'), mode='a', encoding='utf-8') as f:
+            f.write('#{}\n'.format(date))
+            for stock_code in result_list:
+                f.write("{}\n".format(stock_code))
 
-    with open('{}/{}'.format(StockConfig.path_stock, 'wsma10'), 'w', encoding='utf-8') as f:
-        for key in result:
-            if result[key] >= 7:
-                f.write("{},{}\n".format(key.stock_code, key.stock_name))
-
-    print(sorted(result.items(), key=lambda d: d[1], reverse=True))
+        with open('{}/{}.txt'.format(StockConfig.path_track, 'today'), mode='w', encoding='utf-8') as f:
+            f.write('\n#{}\n'.format(date))
+            for stock_code in result_list:
+                f.write("{}\n".format(stock_code))
 
 
 

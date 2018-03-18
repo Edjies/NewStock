@@ -3,48 +3,64 @@ import requests
 import json
 import StockIO
 import StockConfig
+import StockIndicator
 import numpy as np
 from StockDownloader import write_stock_pool
 
 
 
-def fei_lei():
-    stock_level_1 = []
-    stock_level_2 = []
-    stock_level_3 = []
+def week_tendency():
+    stock_result = []
     stock_list_1 = StockIO.get_stock('sha')
     stock_list_2 = StockIO.get_stock('sza')
     stock_list = stock_list_1 + stock_list_2
     for stock in stock_list:
         try:
-            kline = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_month)
+            kline = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_week)
+            close = kline[:, 2].astype(np.float)
+            sma5, sma10, sma20, sma60 = StockIndicator.sma(kline, 5, 10, 20, 60)
         except Exception as e:
             print(e)
             continue
         if kline.shape[0] < 41:
             continue
 
-        close = kline[:, 2].astype(np.float)[-40:]
-        cur = close[-1]
-        # 获取最低价和最高价
-        min = np.min(close)
-        max = np.max(close)
-        # 将将价差分成3等分
-        divide = (max - min) / 3
-        limit1 = min + divide
-        limit2 = min + 2 * divide
-        if cur < limit1:
-            stock_level_1.append(stock)
-        elif cur < limit2:
-            stock_level_2.append(stock)
-        else:
-            stock_level_3.append(stock)
+        if sma5[-1] > sma20[-1]:
+            stock_result.append(stock)
 
-    StockIO.save_stock('level_1', stock_level_1, root=StockConfig.path_stock, message='低价股')
-    StockIO.save_stock('level_2', stock_level_2, root=StockConfig.path_stock, message='中价股')
-    StockIO.save_stock('level_3', stock_level_3, root=StockConfig.path_stock, message='高价股')
+        elif sma20[-1] > sma20[-2]:
+            stock_result.append(stock)
+    return stock_result
 
+def week_tendency2():
+    """
+    收盘价 位于 20日线 或者 60日线之上
+    :return:
+    """
+    stock_result = []
+    stock_list_1 = StockIO.get_stock('sha')
+    stock_list_2 = StockIO.get_stock('sza')
+    stock_list = stock_list_1 + stock_list_2
+    for stock in stock_list:
+        try:
+            kline = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_week)
+            close = kline[:, 2].astype(np.float)
+            sma5, sma10, sma20, sma60 = StockIndicator.sma(kline, 5, 10, 20, 60)
+        except Exception as e:
+            print(e)
+            continue
+        if kline.shape[0] < 41:
+            continue
+
+        if close[-1] > sma20[-1] or close[-1] > sma60[-1]:
+            stock_result.append(stock)
+
+        elif sma5[-1] > sma10[-1]:
+            stock_result.append(stock)
+    return stock_result
 
 if __name__ == '__main__':
-    fei_lei()
+    stock_list = week_tendency()
+    #old_stock_list = StockIO.get_stock('')
+    write_stock_pool('week_tendency', stock_list)
 

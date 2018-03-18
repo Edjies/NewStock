@@ -1,17 +1,19 @@
-# -*-coding:utf-8 -*-
-# import xlrd
-# data = xlrd.open_workbook('data/market.xls') # 打开xls文件
-# table = data.sheets()[0] # 打开第一张表
-# nrows = table.nrows # 获取表的行数
-# for i in range(nrows): # 循环逐行打印
-#     print(table.row_values(i)[:4]) # 取前十三列
-import requests
-url = "http://screener.finance.sina.com.cn/znxg/data/json.php/SSCore.doView"
-session = requests.Session()
-session.trust_env = False
-r = session.post(url, data={"page":"1", "num":"20", "sort":"","asc":"0","field0":"stocktype", "field1":"sinahy", "field2":"diyu", "value0":"*","value1":"*",
-                            "value2":"*","field3":"ltag", "max3":"26192207", "min3":"1000"}, )
-print(r.text)
-
-
-print('2017-09-12' <= '2017-09-13')
+def format_report(product_name,res_flags,case_ids,case_descs,testers):
+    email_list=[]
+    title='%s_%s_测试报告'%(product_name,time.strftime('%Y%m%H%M%S'))
+    count=len(res_flags)
+    pass_count=res_flags.count('pass')
+    fail_count=count-pass_count
+    content='''
+%s:
+    您好，本次测试共运行%s条，通过%s条，失败%S条。
+    执行信息如下：
+    '''%(testers,count.pass_count,fail_count)
+    for case_id,case_desc,res_flag in zip(case_ids,case_descs,res_flags):
+        msg="['%s','%s','%s']+\n"%(case_id,case_desc,res_flag)
+        content+=msg
+    for testers in email_dict:
+        email_list.append(email_dict[testers])
+    print(content)
+    print(email_list)
+    send_email(email_user,email_pws,email_list,title,content)
