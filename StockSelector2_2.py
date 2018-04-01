@@ -10,7 +10,7 @@ import datetime
 import time
 
 @StockFilterWrapper.filtrate_stop_trade
-def select(stock_list, x_position=-1, w_x_position= -1, kline_type=StockConfig.kline_type_week, min_item=120):
+def select(stock_list, x_position=-1, w_x_position= -1, kline_type=StockConfig.kline_type_week, min_item=480):
     """
     均线选股法
     :param stock_list:
@@ -37,21 +37,20 @@ def select(stock_list, x_position=-1, w_x_position= -1, kline_type=StockConfig.k
         if close[x_position] > sma5[x_position] and  close[x_position] > sma10[x_position]:
             add = False
             # 趋势
-            if sma5[x_position] > sma20[x_position] and close[x_position] > max(np.max(close[x_position - 5: x_position]), np.max(open[x_position - 5: x_position])):
-                count = 0
-                while count < 4:
-                    if StockFilter2.is_jx(sma5, sma10, x_position - count):
+            count = 0
+            while count < 4:
+                if StockFilter2.is_jx(sma5, sma10, x_position - count):
 
-                        add = True
-                        break
-                    count += 1
+                    add = True
+                    break
+                count += 1
+
+                # if close[x_position] > sma5[x_position] > sma10[x_position] > open[x_position]:
+                #     add = True
 
             #破势
-            elif close[x_position] > sma10[x_position] > sma5[x_position] > open[x_position]:
-                add = True
-
-            elif close[x_position] > sma5[x_position] > sma10[x_position] > open[x_position]>sma20[x_position]:
-                add = True
+            # elif close[x_position] > sma10[x_position] > sma5[x_position] > open[x_position]:
+            #     add = True
 
 
         if add:
@@ -70,7 +69,7 @@ def select(stock_list, x_position=-1, w_x_position= -1, kline_type=StockConfig.k
 
 
 def get_stock_list(x_position):
-    stock_list = select(StockIO.get_stock('week_tendency'), x_position=x_position, kline_type=StockConfig.kline_type_day)
+    stock_list = select(StockIO.get_stock('week_tendency2'), x_position=x_position, kline_type=StockConfig.kline_type_day)
     # stock_list = []
     #
     # stock_list1 = select(StockIO.get_stock('sza'), x_position=x_position, kline_type=StockConfig.kline_type_day)
@@ -121,8 +120,8 @@ def toTDX():
 
 
 if __name__ == '__main__':
-    position = -7
-    date = '2018-03-08'
+    position = -2
+    date = '2018-03-29'
     stock_list_1 = get_stock_list(position)
     stock_list_2 = get_stock_list(position - 1)
     stock_list_3 = get_stock_list(position - 2)

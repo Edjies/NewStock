@@ -95,9 +95,13 @@ def track():
             # 跌破目标均线
             if target_sma_down != 0:
                 message = ''
+                if target_code == '1002131':
+                    print(target_code)
                 sma, = StockIndicator.sma(kline, abs(target_sma_down))
                 price = quote[target_code]['low']
                 if (price < sma[-1]):
+                    print(sma[-1], price)
+                    print(r.text)
                     message = target_code[1:] + '跌破{}日线:'.format(abs(target_sma_down))
                 if message != '':
                     messagebox.showinfo("tips", message)
@@ -135,22 +139,22 @@ def track():
 
 
             # 默认会跟踪自动筛选出来的 sma变化
-            if target_sma_down == 0 and target_price_down == 0 and target_sma_up == 0 and target_price_up == 0:
-                sma5, sma10, sma20, sma30 = StockIndicator.sma(kline, 5, 10, 20, 30)
-                price = quote[target_code]['low']
-                # sma5 条件
-                if price < sma5[-1]:
-                   message = target_code[1:] + '跌破{}日线:'.format(5)
-                # sma10 条件
-                elif price < sma10[-1]:
-                    message = target_code[1:] + '跌破{}日线:'.format(10)
-                # sma20 条件
-                elif price < sma20[-1]:
-                    message = target_code[1:] + '跌破{}日线:'.format(20)
-                else:
-                    message = ''
-                if message != '':
-                    messagebox.showinfo("tips", message)
+            # if target_sma_down == 0 and target_price_down == 0 and target_sma_up == 0 and target_price_up == 0:
+            #     sma5, sma10, sma20, sma30 = StockIndicator.sma(kline, 5, 10, 20, 30)
+            #     price = quote[target_code]['low']
+            #     # sma5 条件
+            #     if price < sma5[-1]:
+            #        message = target_code[1:] + '跌破{}日线:'.format(5)
+            #     # sma10 条件
+            #     elif price < sma10[-1]:
+            #         message = target_code[1:] + '跌破{}日线:'.format(10)
+            #     # sma20 条件
+            #     elif price < sma20[-1]:
+            #         message = target_code[1:] + '跌破{}日线:'.format(20)
+            #     else:
+            #         message = ''
+            #     if message != '':
+            #         messagebox.showinfo("tips", message)
     return result
 
     # tk显示结果

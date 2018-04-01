@@ -1,5 +1,8 @@
 import logging
 import sys
+import os
+import zipfile
+import StockConfig
 
 def __getLogger():
     # 获取logger实例，如果参数为空则返回root logger
@@ -41,4 +44,56 @@ def __getLogger():
     logger.removeHandler(file_handler)
     return logger
 
-logger=__getLogger()
+
+def zip_dir(source_dir, zip_file):
+  for parent, dirnames, filenames in os.walk(source_dir):
+    for filename in filenames:
+      pathfile = os.path.join(parent, filename)
+      print(pathfile[len(source_dir):])
+      zip_file.write(pathfile, arcname=pathfile[len(source_dir):])
+    # for dirname in dirnames:
+    #   zip_dir(os.path.join(parent, dirname))
+
+
+def data_to_tdx_phone(**kwargs):
+    phone_data_path = '/storage/sdcard0/Android/com.tdx.AndroidNew/backup/backup.zip'
+    pc_data_path = 'D:/new_stock/data'
+    if not os.path.exists(pc_data_path):
+        os.makedirs(pc_data_path)
+
+    # 1. 将手机数据备份
+
+    # 2. 将备份数据拷贝到电脑
+    os.system('adb pull {} {}'.format(phone_data_path, pc_data_path))
+    # 3. 解压备份数据
+    zip_file = zipfile.ZipFile('D:/new_stock/data/backup.zip')
+    zip_file.extractall('D:/new_stock/data')
+    zip_file.close()
+    os.remove('D:/new_stock/data/backup.zip')
+    # 4. 替换文件数据
+    file_list = os.listdir(pc_data_path + '/user/user_guest')#获取解压后的文件列表
+    print(file_list)
+    for key, value in kwargs.items():
+        if '{}.blk'.format(key) in file_list:
+            print(value)
+            with open('{}/user/user_guest/{}.blk'.format(pc_data_path, key), mode='w') as f:
+                for code in value:
+                    f.write(('1' if code.startswith('6') else '0') + code + '\n')
+    # 5. 重新压缩
+    zip_file = zipfile.ZipFile('D:\\new_stock\\backup.zip', 'w')
+    zip_dir('D:\\new_stock\\data', zip_file)
+    zip_file.close()
+    # 6. 重新上传
+    os.system('adb push {} {}'.format('D:/new_stock/backup.zip', '/storage/sdcard0/Android/com.tdx.AndroidNew/backup'))
+
+
+
+stock_code_list = []
+with open('{}/{}'.format(StockConfig.path_stock, 'week_tendency2'), 'r', encoding='utf-8') as f:
+    lines = f.readlines()
+    for line in lines:
+        if not line.startswith("#") and not '\n' == line:
+            data = line.strip('\n').split(',')
+            stock_code_list.append(data[0])
+print(stock_code_list)
+data_to_tdx_phone(zxg=stock_code_list)

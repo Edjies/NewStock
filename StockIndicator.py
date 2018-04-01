@@ -165,7 +165,10 @@ def hsl(kline, ltgb):
     return np.round(cjl/(ltgb * 100), decimals=2)
 
 
-
+def zf(kline):
+    open = kline[:, 1].astype(np.float)
+    close = kline[:, 2].astype(np.float)
+    return np.round((close - open)/open * 100, decimals=2)
 
 
 

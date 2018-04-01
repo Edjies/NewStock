@@ -60,7 +60,13 @@ def week_tendency2():
     return stock_result
 
 if __name__ == '__main__':
-    stock_list = week_tendency()
+    old_stock_list = StockIO.get_stock('week_tendency')
+    stock_list = week_tendency2()
+
+    # new_add_stock = [stock for stock in stock_list if stock not in old_stock_list]
+    # new_reduce_stock = [stock for stock in old_stock_list if stock not in stock_list]
+    # print('new_add_stock: ', new_add_stock)
+    # print('new_reduce_stock: ', new_reduce_stock)
     #old_stock_list = StockIO.get_stock('')
     write_stock_pool('week_tendency', stock_list)
 
