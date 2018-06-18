@@ -34,7 +34,7 @@ def select(stock_list, x_position=-1, w_x_position= -1, kline_type=StockConfig.k
         w_close = w_kline[:, 2].astype(np.float)
         #if w_sma5[w_x_position] > w_sma10[w_x_position]:
         if close[x_position] > sma5[x_position] > sma10[x_position] and close[x_position] > sma30[x_position] and close[x_position] > sma60[x_position]:
-                if close[x_position] > np.max(close[x_position - 8: x_position]):
+                if close[x_position] > np.max(close[x_position - 10: x_position]):
                     if cjl[x_position] > np.max(cjl[x_position - 8: x_position]):
                         count = 0
                         add = False

@@ -9,7 +9,7 @@ import numpy as np
 
 @filtrate_high_price
 @filtrate_stop_trade
-def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, period=5, max_sum_chg=12, min_sum_chg = -12, min_sum_vb=40, min_item=120):
+def select(stock_list, kline_type=StockConfig.kline_type_day, x_position=-1, min_item=120):
     """
     根据 振幅区间 和 涨幅区间排序
     :param stock_list:
@@ -27,34 +27,40 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, pe
         if kline.shape[0] < min_item:
             continue
 
-        from_position = x_position - period + 1
-        to_position = None if x_position == -1 else (x_position + 1)
-        close = kline[:, -2].astype(np.float)[from_position:to_position]
-        chg = StockIndicator.chg(kline)[from_position:to_position]
-        vb = StockIndicator.vibration(kline)[from_position:to_position]
-        sma20 = StockIndicator.sma(kline, 20)[0][from_position:to_position]
-        real_max_sum_chg, real_min_sum_chg = StockAlgrithm.sumOfSubArray(chg)
-        real_min_sum_vb = np.sum(vb)
-        if real_max_sum_chg < max_sum_chg and real_min_sum_chg > min_sum_chg and real_min_sum_vb > min_sum_vb:
-            if close[-1] < sma20[-1]:
-                print(stock)
-                print(vb)
-                result.append(stock)
+        open = kline[:, -1].astype(np.float)
+        close = kline[:, -2].astype(np.float)
+        high = kline[:, -3].astype(np.float)
+        low = kline[:, -4].astype(np.float)
+        sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
+        vb = StockIndicator.vibration(kline)
+        count = 9
+        stock.count = 0
+        while count >= 0:
+            strength = 0
+            if high[x_position - count] > sma5[x_position - count] > low[x_position - count]:
+                strength += 1
+            if high[x_position - count] > sma10[x_position - count] > low[x_position - count]:
+                strength += 1
+            if high[x_position - count] > sma20[x_position - count] > low[x_position - count]:
+                strength += 1
+            if strength >= 4 and vb[x_position - count] > 4:
+                stock.count += 1
+            count -= 1
+        if stock.count > 3:
+            result.append(stock)
+            print(stock)
     return result
+
+def get_stock_list(x_position):
+    stock_list = select(StockIO.get_stock('sha'), x_position=x_position, kline_type=StockConfig.kline_type_day)
+    stock_list += select(StockIO.get_stock('sza'), x_position=x_position, kline_type=StockConfig.kline_type_day)
+    return stock_list
 
 if __name__ == '__main__':
     date = '2017-02-03'
     position = StockIndicator.position(date, '000001')
 
-    result = {}
-    for x in range(-10, 0):
-        print('x = ', x)
-        stock_list = select(StockIO.get_stock('level_1'), kline_type=StockConfig.kline_type_day, x_position=x, period=5, max_sum_chg= 10, min_sum_chg= -12, min_sum_vb= 30)
-        print(stock_list)
-
-        for stock in stock_list:
-            result[stock.stock_code] = result.get(stock.stock_code, 0) + 1
-
-
-    print(sorted(result.items(), key=lambda d: d[1], reverse=True))
+    stock_list = get_stock_list(-6)
+    stock_list = sorted(stock_list, key=lambda stock: stock.count, reverse=True)
+    print(stock_list)
 

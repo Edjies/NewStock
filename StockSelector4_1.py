@@ -51,7 +51,7 @@ if __name__ == '__main__':
     result = {}
     for x in range(-5, 0):
         print('x = ', x)
-        stock_list = select(StockIO.get_stock('sha'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=6, ratio=0.4)
+        stock_list = select(StockIO.get_stock('sha'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=5, ratio=0.4)
         print(stock_list)
         for stock in stock_list:
             result[stock] = result.get(stock, 0) + 1

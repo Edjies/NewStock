@@ -34,7 +34,7 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
         sma5, sma10, sma20 = StockIndicator.sma(kline, 5, 10, 20)
 
         if StockShape.is_lower_shadow(open[x_position], close[x_position], high[x_position], low[x_position], min_vb=min_vb, ratio=ratio, red=True):
-            if cjl[x_position] > cjl[x_position - 1]:
+            if sma20[x_position] < sma10[x_position] < sma5[x_position] and low[x_position] < sma10[x_position]:
                 print(stock)
                 result.append(stock)
                 # print(stock)
@@ -50,9 +50,9 @@ def select(stock_list, kline_type=StockConfig.kline_type_week, x_position=-1, mi
 
 if __name__ == '__main__':
     stock_list = []
-    for x in range(-1, 0):
-        stock_list += select(StockIO.get_stock('sza'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=5, ratio=0.5)
-        #stock_list += select(StockIO.get_stock('sza'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=5,ratio=0.6)
+    for x in range(-10, 0):
+        stock_list += select(StockIO.get_stock('sha'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=5, ratio=0.4)
+        stock_list += select(StockIO.get_stock('sza'), x_position=x, kline_type=StockConfig.kline_type_day, min_vb=5,ratio=0.4)
     print(stock_list)
 
     with open('C:/Users/panha/Desktop/xgfx/1002.txt', mode='a', encoding='utf-8') as f:

@@ -52,10 +52,7 @@ def week_tendency2():
         if kline.shape[0] < 41:
             continue
 
-        if close[-1] > sma20[-1] or close[-1] > sma60[-1]:
-            stock_result.append(stock)
-
-        elif sma5[-1] > sma10[-1]:
+        if sma5[-2] > sma10[-2] and sma5[-2] > sma20[-2]:
             stock_result.append(stock)
     return stock_result
 

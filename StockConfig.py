@@ -19,11 +19,12 @@ path_track = 'data/track'
 
 
 class Stock(object):
-    __slots__ = ['stock_code', 'stock_name', 'stock_updown', 'max_exceed']
+    __slots__ = ['stock_code', 'stock_name', 'stock_updown', 'max_exceed','vb', 'count']
 
     def __init__(self, stock_code, stock_name):
         self.stock_code = stock_code
         self.stock_name = stock_name
+        self.count = 0
         if self.stock_name.startswith('N'):
             self.stock_name = self.stock_name[1:]
 

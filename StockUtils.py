@@ -45,6 +45,14 @@ def __getLogger():
     return logger
 
 
+def get_annotation_data():
+    import re
+    with open('{}/{}'.format(StockConfig.path_track, '2_sma_track.txt'), 'r', encoding='utf-8') as f:
+        content = ''.join(f.readlines())
+        result = re.findall(r'#+[0-9]{6},', content)
+    return [x[1:-1] for x in result]
+
+
 def zip_dir(source_dir, zip_file):
   for parent, dirnames, filenames in os.walk(source_dir):
     for filename in filenames:
@@ -55,8 +63,52 @@ def zip_dir(source_dir, zip_file):
     #   zip_dir(os.path.join(parent, dirname))
 
 
+def get_phone_data(key):
+    phone_data_path = '/storage/emulated/0/Android/com.tdx.AndroidNew/backup/backup.zip'
+    pc_data_path = 'D:/new_stock/data'
+    if not os.path.exists(pc_data_path):
+        os.makedirs(pc_data_path)
+
+    # 1. 将手机数据备份
+
+    # 2. 将备份数据拷贝到电脑
+
+    os.system('adb pull {} {}'.format(phone_data_path, pc_data_path))
+    # 3. 解压备份数据
+    zip_file = zipfile.ZipFile('D:/new_stock/data/backup.zip')
+    zip_file.extractall('D:/new_stock/data')
+    zip_file.close()
+    os.remove('D:/new_stock/data/backup.zip')
+    # 4. 替换文件数据
+    file_list = os.listdir(pc_data_path + '/user/user_guest')  # 获取解压后的文件列表
+    if '{}.blk'.format(key) in file_list:
+        stock_codes = []
+        with open('{}/user/user_guest/{}.blk'.format(pc_data_path, key), mode='r') as f:
+            for line in f.readlines():
+                if not '\n' == line and line != '':
+                    stock_codes.append(line.strip('\n')[1:])
+
+        with open('{}/{}'.format(StockConfig.path_track, '2_sma_track.txt'), 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+
+        with open('{}/{}'.format(StockConfig.path_track, '2_sma_track.txt'), 'w', encoding='utf-8') as f:
+            for line in lines:
+                if not line.startswith("#") and not '\n' == line:
+                    data = line.strip('\n').split(',')
+                    stock_code = data[0]
+                    if stock_code in stock_codes:
+                        stock_codes.remove(stock_code)
+                        f.write(line)
+                else:
+                    f.write(line)
+        return stock_codes
+    return []
+
 def data_to_tdx_phone(**kwargs):
-    phone_data_path = '/storage/sdcard0/Android/com.tdx.AndroidNew/backup/backup.zip'
+    phone_data_path = '/storage/emulated/0/Android/com.tdx.AndroidNew/backup/backup.zip'
+    #phone_data_path = '/sdcard/Android/com.tdx.AndroidNew/backup/backup.zip'
+    phone_data_dir_path = phone_data_path[:-11]  #'/sdcard/Android/com.tdx.AndroidNew/backup'
+    print(phone_data_dir_path)
     pc_data_path = 'D:/new_stock/data'
     if not os.path.exists(pc_data_path):
         os.makedirs(pc_data_path)
@@ -84,16 +136,28 @@ def data_to_tdx_phone(**kwargs):
     zip_dir('D:\\new_stock\\data', zip_file)
     zip_file.close()
     # 6. 重新上传
-    os.system('adb push {} {}'.format('D:/new_stock/backup.zip', '/storage/sdcard0/Android/com.tdx.AndroidNew/backup'))
+    os.system('adb push {} {}'.format('D:/new_stock/backup.zip', phone_data_dir_path))
 
 
 
-stock_code_list = []
-with open('{}/{}'.format(StockConfig.path_stock, 'week_tendency2'), 'r', encoding='utf-8') as f:
-    lines = f.readlines()
-    for line in lines:
-        if not line.startswith("#") and not '\n' == line:
-            data = line.strip('\n').split(',')
-            stock_code_list.append(data[0])
-print(stock_code_list)
-data_to_tdx_phone(zxg=stock_code_list)
+if __name__=='__main__':
+    #data to phone
+    stock_code_list = []
+    with open('{}/{}'.format(StockConfig.path_track, '1_sma_track.txt'), 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+        for line in lines:
+            if not line.startswith("#") and not '\n' == line:
+                data = line.strip('\n').split(',')
+                stock_code_list.append(data[0])
+    print(stock_code_list)
+    data_to_tdx_phone(zxg=stock_code_list)
+
+
+    # phone to pc
+    #print(get_phone_data('zxg'))
+
+
+    # get annotation data
+    #data_to_tdx_phone(todo=get_annotation_data())
+    #result = get_annotation_data()
+
