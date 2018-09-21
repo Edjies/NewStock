@@ -6,7 +6,6 @@ import StockIndicator
 import numpy as np
 import StockFilterWrapper
 import StockFilter2
-import pymysql
 import datetime
 import time
 
@@ -35,12 +34,13 @@ def select(stock_list, x_position=-1, w_x_position= -1, kline_type=StockConfig.k
         sma5, sma10, sma20, sma30, sma60= StockIndicator.sma(kline, 5, 10, 20, 30, 60)
         cjl = StockIndicator.cjl(kline)
         add = False
-        if close[x_position] > sma5[x_position] > sma10[x_position] and close[x_position] > sma20[x_position] and sma5[x_position] > sma20[x_position]:
+        if close[x_position] > sma5[x_position] > sma10[x_position]:
+                #and close[x_position] > sma20[x_position] and sma5[x_position] > sma20[x_position]
             if close[x_position] > np.max(close[x_position - 10: x_position]):
                 add = False
                 # 趋势
                 count = 0
-                while count < 10:
+                while count < 4:
                     if StockFilter2.is_jx(sma5, sma10, x_position - count):
 
                         add = True
@@ -117,7 +117,7 @@ def toTDX():
 
 
 if __name__ == '__main__':
-    for position in range(-10, 0):
+    for position in range(-3, 0):
         position = position
         #position = StockIndicator.position('2017-12-15', stock_code='601398')
         date = 'yyyy-mm-dd'

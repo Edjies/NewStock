@@ -1,19 +1,21 @@
-def format_report(product_name,res_flags,case_ids,case_descs,testers):
-    email_list=[]
-    title='%s_%s_测试报告'%(product_name,time.strftime('%Y%m%H%M%S'))
-    count=len(res_flags)
-    pass_count=res_flags.count('pass')
-    fail_count=count-pass_count
-    content='''
-%s:
-    您好，本次测试共运行%s条，通过%s条，失败%S条。
-    执行信息如下：
-    '''%(testers,count.pass_count,fail_count)
-    for case_id,case_desc,res_flag in zip(case_ids,case_descs,res_flags):
-        msg="['%s','%s','%s']+\n"%(case_id,case_desc,res_flag)
-        content+=msg
-    for testers in email_dict:
-        email_list.append(email_dict[testers])
-    print(content)
-    print(email_list)
-    send_email(email_user,email_pws,email_list,title,content)
+# coding=utf-8
+from __future__ import print_function, absolute_import
+from gm.api import *
+
+
+def init(context):
+    # 订阅浦发银行, bar频率为一天
+    subscribe(symbols='SHSE.600000', frequency='12s', count=10)
+
+
+def on_bar(context, bars):
+    # 打印当前获取的bar信息
+    print(bars)
+
+
+if __name__ == '__main__':
+    run(strategy_id='1a59545f-bc82-11e8-8dc8-2047477914bf',
+        filename='t2.py',
+        mode=1,
+        token='f2abaec3366e095875b3e847ee2b707cb2d33d5b',
+        backtest_start_time='2016-06-17 13:00:00', backtest_end_time='2017-08-21 15:00:00')

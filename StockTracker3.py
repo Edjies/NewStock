@@ -15,7 +15,7 @@ track_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, o
 
 def get_track_data():
     data = []
-    with open('{}/{}'.format(StockConfig.path_track, '3_sma_track.txt'), 'r', encoding='utf-8') as f:
+    with open('{}/{}'.format(StockConfig.path_track, '2_sma_track.txt'), 'r', encoding='utf-8') as f:
         for line in f.readlines():
             if not line.startswith("#") and not '\n' == line:
                 data.append(line.strip('\n').split(','))

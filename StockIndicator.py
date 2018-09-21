@@ -4,7 +4,6 @@ try:
 except ImportError:
     pass
 import numpy as np
-import pandas as pd
 import StockIO
 import StockConfig
 
@@ -75,9 +74,8 @@ def sma(kline, *timeperiod):
 
 
 def _sma(nparr, timeperiod):
-    # r = [np.round((sum(nparr[index-timeperiod+1:index + 1])/timeperiod if timeperiod <= (index + 1) else 0), 2) for index, i in enumerate(nparr)]
-    # return np.array(r)
-    return pd.rolling_mean(nparr, timeperiod)
+    return np.convolve(np.ones(timeperiod) / timeperiod,  nparr)[timeperiod - 1 : -timeperiod + 1]
+    #return pd.rolling_mean(nparr, timeperiod)
 
 
 def asma(nparr, *timeperiod):

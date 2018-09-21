@@ -65,7 +65,7 @@ def zip_dir(source_dir, zip_file):
 
 def get_phone_data(key):
     phone_data_path = '/storage/emulated/0/Android/com.tdx.AndroidNew/backup/backup.zip'
-    pc_data_path = 'D:/new_stock/data'
+    pc_data_path = 'C:/new_stock/data'
     if not os.path.exists(pc_data_path):
         os.makedirs(pc_data_path)
 
@@ -75,10 +75,10 @@ def get_phone_data(key):
 
     os.system('adb pull {} {}'.format(phone_data_path, pc_data_path))
     # 3. 解压备份数据
-    zip_file = zipfile.ZipFile('D:/new_stock/data/backup.zip')
-    zip_file.extractall('D:/new_stock/data')
+    zip_file = zipfile.ZipFile('C:/new_stock/data/backup.zip')
+    zip_file.extractall('C:/new_stock/data')
     zip_file.close()
-    os.remove('D:/new_stock/data/backup.zip')
+    os.remove('C:/new_stock/data/backup.zip')
     # 4. 替换文件数据
     file_list = os.listdir(pc_data_path + '/user/user_guest')  # 获取解压后的文件列表
     if '{}.blk'.format(key) in file_list:
@@ -105,11 +105,11 @@ def get_phone_data(key):
     return []
 
 def data_to_tdx_phone(**kwargs):
-    phone_data_path = '/storage/emulated/0/Android/com.tdx.AndroidNew/backup/backup.zip'
-    #phone_data_path = '/sdcard/Android/com.tdx.AndroidNew/backup/backup.zip'
+    phone_data_path = '/storage/emulated/0/Android/com.tdx.AndroidNew/backup/backup.zip' # 小米手机
+    #phone_data_path = '/sdcard/Android/com.tdx.AndroidNew/backup/backup.zip' #华为手机
     phone_data_dir_path = phone_data_path[:-11]  #'/sdcard/Android/com.tdx.AndroidNew/backup'
     print(phone_data_dir_path)
-    pc_data_path = 'D:/new_stock/data'
+    pc_data_path = 'C:/new_stock/data'
     if not os.path.exists(pc_data_path):
         os.makedirs(pc_data_path)
 
@@ -118,10 +118,10 @@ def data_to_tdx_phone(**kwargs):
     # 2. 将备份数据拷贝到电脑
     os.system('adb pull {} {}'.format(phone_data_path, pc_data_path))
     # 3. 解压备份数据
-    zip_file = zipfile.ZipFile('D:/new_stock/data/backup.zip')
-    zip_file.extractall('D:/new_stock/data')
+    zip_file = zipfile.ZipFile('C:/new_stock/data/backup.zip')
+    zip_file.extractall('C:/new_stock/data')
     zip_file.close()
-    os.remove('D:/new_stock/data/backup.zip')
+    os.remove('C:/new_stock/data/backup.zip')
     # 4. 替换文件数据
     file_list = os.listdir(pc_data_path + '/user/user_guest')#获取解压后的文件列表
     print(file_list)
@@ -132,25 +132,35 @@ def data_to_tdx_phone(**kwargs):
                 for code in value:
                     f.write(('1' if code.startswith('6') else '0') + code + '\n')
     # 5. 重新压缩
-    zip_file = zipfile.ZipFile('D:\\new_stock\\backup.zip', 'w')
-    zip_dir('D:\\new_stock\\data', zip_file)
+    zip_file = zipfile.ZipFile('C:\\new_stock\\backup.zip', 'w')
+    zip_dir('C:\\new_stock\\data', zip_file)
     zip_file.close()
     # 6. 重新上传
-    os.system('adb push {} {}'.format('D:/new_stock/backup.zip', phone_data_dir_path))
+    os.system('adb push {} {}'.format('C:/new_stock/backup.zip', phone_data_dir_path))
 
 
 
 if __name__=='__main__':
     #data to phone
     stock_code_list = []
-    with open('{}/{}'.format(StockConfig.path_track, '1_sma_track.txt'), 'r', encoding='utf-8') as f:
+    with open('{}/{}'.format(StockConfig.path_track, '2_sma_track.txt'), 'r', encoding='utf-8') as f:
         lines = f.readlines()
         for line in lines:
             if not line.startswith("#") and not '\n' == line:
                 data = line.strip('\n').split(',')
                 stock_code_list.append(data[0])
     print(stock_code_list)
-    data_to_tdx_phone(zxg=stock_code_list)
+    data_to_tdx_phone(bad_market=stock_code_list)
+
+    stock_code_list = []
+    with open('{}/{}'.format(StockConfig.path_track, 'today.txt'), 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+        for line in lines:
+            if not line.startswith("#") and not '\n' == line:
+                data = line.strip('\n').split(',')
+                stock_code_list.append(data[0])
+    print(stock_code_list)
+    data_to_tdx_phone(good_market=stock_code_list)
 
 
     # phone to pc

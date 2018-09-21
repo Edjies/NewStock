@@ -10,7 +10,7 @@ import datetime
 import time
 
 @StockFilterWrapper.filtrate_stop_trade
-def select(stock_list, x_position=-1, kline_type=StockConfig.kline_type_day, min_item=120):
+def select(stock_list, x_position=-1, min_item=120):
     """
     均线选股法
     :param stock_list:
@@ -21,7 +21,8 @@ def select(stock_list, x_position=-1, kline_type=StockConfig.kline_type_day, min
     result = []
     for stock in stock_list:
         try:
-            kline = StockIO.get_kline(stock.stock_code, kline_type=kline_type)
+            kline = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_week)
+            kline_day = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_day)
         except Exception as e:
             print(e)
             continue
@@ -31,11 +32,14 @@ def select(stock_list, x_position=-1, kline_type=StockConfig.kline_type_day, min
         open = kline[:, 1].astype(np.float)
         close = kline[:, 2].astype(np.float)
         low = kline[:, 4].astype(np.float)
-        sma5, sma10, sma20, sma30, sma60= StockIndicator.sma(kline, 5, 10, 20, 30, 60)
-        zf = StockIndicator.zf(kline)
+        sma5, sma10, sma20, sma60= StockIndicator.sma(kline, 5, 10, 20, 60)
+        sma5_day, sma10_day, sma20_day = StockIndicator.sma(kline_day, 5, 10, 20)
+        if stock.stock_code == '300146':
+            print(stock.stock_code)
 
-        if close[x_position] > sma5[x_position] > sma10[x_position] > open[x_position] and sma10[x_position] > sma20[x_position]:
-            if zf[x_position] > 5:
+        if sma5[x_position] > sma20[x_position] or sma5[x_position] > sma60[x_position]:
+                #or (sma5[x_position] > sma10[x_position] and close[x_position] > sma20[x_position]):
+            #if sma5_day[x_position] > sma10_day[x_position]:
                 print(stock)
                 result.append(stock)
     return result
@@ -43,21 +47,31 @@ def select(stock_list, x_position=-1, kline_type=StockConfig.kline_type_day, min
 
 
 if __name__ == '__main__':
-    position = -7
-    date = '2018-03-20'
-    stock_list = select(StockIO.get_stock('sha'), x_position=position, kline_type=StockConfig.kline_type_day) + \
-                 select(StockIO.get_stock('sza'), x_position=position, kline_type=StockConfig.kline_type_day)
-    print(stock_list)
-    stock_code_list = []
-    with open('data/track/2_sma_track.txt', mode='a', encoding='utf-8') as f:
-        f.write('\n#{}\n'.format(date))
-        for key in stock_list:
-            if key.stock_code not in stock_code_list:
-                f.write('{:>6},{: >5},{:>2},{:>2},{:>5},{:>5}, , ,\n'.format(key.stock_code, key.stock_name, '', '', '00.00', '00.00'))
+    position = -1
+    date = '2018-07-17'
+    stock_list = select(StockIO.get_stock('sha'), x_position=position) + \
+                 select(StockIO.get_stock('sza'), x_position=position)
+    #stock_list = select(StockIO.get_stock('sha'), x_position=position)
 
-    with open('data/track/s3_{}.txt'.format(date), mode='w', encoding='utf-8') as f:
+    print(stock_list)
+
+    origin_stock_code_list = []
+    # with open('data/track/today.txt', mode='r', encoding='utf-8') as f:
+    #     lines = f.readlines()
+    #     for line in lines:
+    #         if not line.startswith("#") and not '\n' == line:
+    #             data = line.strip('\n').split(',')
+    #             origin_stock_code_list.append(data[0])
+
+
+
+
+    with open('data/track/today.txt', mode='w', encoding='utf-8') as f:
+
+        f.write('###' + date + '\n')
         for key in stock_list:
-            if key.stock_code not in stock_code_list:
+            code = key.stock_code
+            if code not in origin_stock_code_list:
                 f.write("{}\n".format(key.stock_code))
 
 

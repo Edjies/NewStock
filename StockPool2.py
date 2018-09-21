@@ -25,11 +25,11 @@ def week_tendency():
         if kline.shape[0] < 41:
             continue
 
-        if sma5[-1] > sma20[-1]:
+        if sma5[-2] > sma20[-2]:
             stock_result.append(stock)
-
-        elif sma20[-1] > sma20[-2]:
-            stock_result.append(stock)
+        #
+        # elif sma20[-1] > sma20[-2]:
+        #     stock_result.append(stock)
     return stock_result
 
 def week_tendency2():
@@ -58,7 +58,7 @@ def week_tendency2():
 
 if __name__ == '__main__':
     old_stock_list = StockIO.get_stock('week_tendency')
-    stock_list = week_tendency2()
+    stock_list = week_tendency()
 
     # new_add_stock = [stock for stock in stock_list if stock not in old_stock_list]
     # new_reduce_stock = [stock for stock in old_stock_list if stock not in stock_list]
