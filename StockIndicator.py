@@ -138,7 +138,7 @@ def chg(kline):
     return np.round(diff / p_close * 100, decimals=2)
 
 
-def max_chg(kline):
+def max_df(kline):
     """
     计算最大涨跌幅
     :param kline:
@@ -149,7 +149,7 @@ def max_chg(kline):
     high = kline[:, 3].astype(np.float)
     low = kline[:, 4].astype(np.float)
     p_close = np.roll(close, 1)
-    diff = close - p_close
+    diff = low - p_close
     return np.round(diff / p_close * 100, decimals=2)
 
 

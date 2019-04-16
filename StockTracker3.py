@@ -35,7 +35,7 @@ def get_track_data():
 def read_xlsx(filename):
     wb = load_workbook(filename=filename)
     array = []
-    sheet = wb['Sheet1']
+    sheet = wb['stock']
     print(sheet['A1'].value)
     for row in sheet.iter_rows(min_row=2, max_col=8, max_row=1000):
         if row[0].value is None:
@@ -137,7 +137,7 @@ def track():
             # 跌到目标价位
             if target_price_down != 0:
                 message = ''
-                cur_price = float(quote[target_code]['low'])
+                cur_price = float(quote[target_code]['price'])
                 message = ''
                 if cur_price <= abs(target_price_down):
                     message = target_code[1:] + '跌到目标价位:' + str(abs(target_price_down))

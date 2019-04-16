@@ -2,3 +2,4 @@ data/kline/
 .idea/
 _pycache_
 __pycache__/
+venv/
