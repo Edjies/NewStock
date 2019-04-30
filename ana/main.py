@@ -27,7 +27,8 @@ def simple(stock_code, *profit_tag):
     plt.show()
 
 
-simple('600392', '营业收入', '五、净利润')
+simple('002217', '营业收入', '五、净利润')
+
 
 
 

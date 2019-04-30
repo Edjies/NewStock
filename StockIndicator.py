@@ -152,6 +152,19 @@ def max_df(kline):
     diff = low - p_close
     return np.round(diff / p_close * 100, decimals=2)
 
+def max_zf(kline):
+    """
+    计算最大涨跌幅
+    :param kline:
+    :return:
+    """
+    open = kline[:, 1].astype(np.float)
+    close = kline[:, 2].astype(np.float)
+    high = kline[:, 3].astype(np.float)
+    low = kline[:, 4].astype(np.float)
+    diff = high - low
+    return np.round(diff / low * 100, decimals=2)
+
 
 def cjl(kline):
     _cjl = kline[:, 5].astype(np.float)
