@@ -2,6 +2,7 @@
 import os
 source_sina = 'sina'
 source_tencent = 'tencent'
+source_gzw = 'gzw'
 
 kline_type_day = 'day'
 kline_type_week = 'week'

@@ -105,8 +105,8 @@ def get_phone_data(key):
     return []
 
 def data_to_tdx_phone(**kwargs):
-    #phone_data_path = '/storage/emulated/0/Android/com.tdx.AndroidNew/backup/backup.zip' # 小米手机
-    phone_data_path = '/sdcard/Android/com.tdx.AndroidNew/backup/backup.zip' #华为手机
+    phone_data_path = '/storage/emulated/0/Android/com.tdx.AndroidNew/backup/backup.zip' # 小米手机
+    #phone_data_path = '/sdcard/Android/com.tdx.AndroidNew/backup/backup.zip' #华为手机
     phone_data_dir_path = phone_data_path[:-11]  #'/sdcard/Android/com.tdx.AndroidNew/backup'
     print(phone_data_dir_path)
     pc_data_path = 'C:/new_stock/data'
@@ -142,16 +142,16 @@ def data_to_tdx_phone(**kwargs):
 
 if __name__=='__main__':
     #data to phone
-
     stock_code_list = []
     with open('{}/{}'.format(StockConfig.path_track, 'today.txt'), 'r', encoding='utf-8') as f:
         lines = f.readlines()
         for line in lines:
             if not line.startswith("#") and not '\n' == line:
                 data = line.strip('\n').split(',')
-                stock_code_list.append(data[0])
+                if data[0] not in stock_code_list:
+                    stock_code_list.append(data[0])
     print(stock_code_list)
-    data_to_tdx_phone(zxg=stock_code_list)
+    data_to_tdx_phone(TODAY=stock_code_list)
 
 
     # phone to pc

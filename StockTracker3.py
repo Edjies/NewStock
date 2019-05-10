@@ -5,12 +5,15 @@ import os
 import numpy as np
 import StockConfig
 import StockIO
-from tkinter import messagebox
+#from tkinter import messagebox
 import time
 import datetime
 import StockIndicator
 from numpy import genfromtxt
 from openpyxl import load_workbook
+
+import tkinter as tk
+import tkinter.messagebox as msg
 
 track_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir, os.pardir, 'stock', 'track'))
 # 便宜的股票要拿得住，一定要留有底仓
@@ -43,6 +46,8 @@ def read_xlsx(filename):
         item = []
         for index in range(0, 8):
             item.append('' if row[index].value is None else row[index].value)
+        if item[0].startswith('#') or item[0].startswith('!'):
+            continue
         array.append(item)
     npdata = np.array(array, dtype='str')
     print(npdata)
@@ -121,7 +126,7 @@ def track():
                     print(r.text)
                     message = target_code[1:] + '跌破{}日线:'.format(abs(target_sma_down))
                 if message != '':
-                    messagebox.showinfo("tips", message)
+                    show_dialog("tips", message)
 
             # 突破目标均线
             if target_sma_up != 0:
@@ -132,7 +137,7 @@ def track():
                     message = target_code[1:] + '突破{}日线:'.format(abs(target_sma_up))
 
                 if message != '':
-                    messagebox.showinfo("tips", message)
+                    show_dialog("tips", message)
 
             # 跌到目标价位
             if target_price_down != 0:
@@ -142,7 +147,7 @@ def track():
                 if cur_price <= abs(target_price_down):
                     message = target_code[1:] + '跌到目标价位:' + str(abs(target_price_down))
                 if message != '':
-                    messagebox.showinfo("tips", message)
+                    show_dialog("tips", message)
 
             # 涨到目标价位
             if target_price_up != 0:
@@ -152,7 +157,7 @@ def track():
                 if cur_price >= abs(target_price_up):
                     message = target_code[1:] + '涨到目标价位:' + str(abs(target_price_up))
                 if message != '':
-                    messagebox.showinfo("tips", message)
+                    show_dialog("tips", message)
 
             # 每日目标跌幅
             if target_chg_down != 0:
@@ -162,7 +167,7 @@ def track():
                 if chg < target_chg_down:
                     message = target_code[1:] + '跌到目标跌幅:' + str(chg)
                     if message != '':
-                        messagebox.showinfo("tips", message)
+                        show_dialog("tips", message)
 
             if target_chg_up != 0:
                 p_close = float(quote[target_code]['yestclose'])
@@ -171,7 +176,7 @@ def track():
                 if chg > target_chg_up:
                     message = target_code[1:] + '涨到目标涨幅:' + str(chg)
                     if message != '':
-                        messagebox.showinfo("tips", message)
+                        show_dialog("tips", message)
             # 每日目标涨幅
 
 
@@ -191,7 +196,7 @@ def track():
             #     else:
             #         message = ''
             #     if message != '':
-            #         messagebox.showinfo("tips", message)
+            #         show_dialog("tips", message)
     return result
 
     # tk显示结果
@@ -207,6 +212,20 @@ def startTrack():
             pass
         time.sleep(10)
 
+def show_dialog(title, message):
+    root = tk.Tk()
+
+    if root._windowingsystem == 'win32':
+        # windows showerror
+        top = tk.Toplevel(root)
+        top.iconify()
+        msg.showerror(title, message, parent=top)
+        top.destroy()
+    else:
+        # non-windows showerror
+        msg.showerror(title, message)
+
+    root.destroy()
 
 if __name__=="__main__":
     startTrack()

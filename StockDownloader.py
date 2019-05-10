@@ -23,8 +23,8 @@ def download_stock_kline(source, kline_type):
     :param kline_type:
     """
     if source == source_tencent:
-        get_kline_from_tencent(get_stock('sha'), kline_type)
-        get_kline_from_tencent(get_stock('sza'), kline_type)
+        get_kline_from_tencent(get_stock('gzw'), kline_type)
+        #get_kline_from_tencent(get_stock('sza'), kline_type)
 
 
 def get_stock_pool_from_sina(node, page):
@@ -33,7 +33,7 @@ def get_stock_pool_from_sina(node, page):
     :param node:
     :param page:
     :return:
-    """
+"""
     stock_list = []
     time.sleep(1)
     print('start load {} page'.format(str(page)))
@@ -206,7 +206,7 @@ if __name__ == '__main__':
     #get_stock_pool(source_sina)
     #update_stock_kline(source_tencent, kline_type_day)
     download_stock_kline(source_tencent, kline_type_day)
-    download_stock_kline(source_tencent, kline_type_week)
+    #download_stock_kline(source_tencent, kline_type_week)
     #download_stock_kline(source_tencent, kline_type_month)
 
     #upate_kline_day(sina_node_sh_a, 1)

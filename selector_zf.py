@@ -50,8 +50,8 @@ def select(stock_list, x_position=-1, zf=4, kline_type=StockConfig.kline_type_we
 
 
 def get_stock_list(x_position, zf=4, kline_type=StockConfig.kline_type_week):
-    stock_list = select(StockIO.get_stock('sha'), x_position=x_position, zf= zf, kline_type=kline_type)
-    stock_list += select(StockIO.get_stock('sza'), x_position=x_position, zf= zf, kline_type=kline_type)
+    stock_list = select(StockIO.get_stock('gzw'), x_position=x_position, zf= zf, kline_type=kline_type)
+
     return stock_list
 
 
@@ -71,9 +71,8 @@ def toTDX():
 
 
 if __name__ == '__main__':
-
     date = 'yyyy-mm-dd'
-    stock_list = get_stock_list(x_position=-2, zf=6, kline_type=StockConfig.kline_type_week)
+    stock_list = get_stock_list(x_position=-1, zf=4, kline_type=StockConfig.kline_type_day)
 
     stock_code_list = []
 

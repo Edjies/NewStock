@@ -45,7 +45,7 @@ def is_stop_trade(stock):
     :param last_date:
     :return:
     """
-    kline_ref = StockIO.get_kline('601398', kline_type=StockConfig.kline_type_day)
+    kline_ref = StockIO.get_kline('601857', kline_type=StockConfig.kline_type_day)
     kline = StockIO.get_kline(stock.stock_code, kline_type=StockConfig.kline_type_day)
     date_ref = kline_ref[:, 0]
     date = kline[:, 0]

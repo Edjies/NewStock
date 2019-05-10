@@ -63,7 +63,7 @@ def toTDX():
 if __name__ == '__main__':
 
     date = 'yyyy-mm-dd'
-    stock_list = get_stock_list(x_position=-1, df=-6, kline_type=StockConfig.kline_type_day)
+    stock_list = get_stock_list(x_position=-1, df=-6, kline_type=StockConfig.kline_type_week)
 
     stock_code_list = []
 
